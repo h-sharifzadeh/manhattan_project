@@ -9,6 +9,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "dataStructure.h"
+
 
 class Soccer: public aiwc::ai_base
 {
@@ -21,6 +23,15 @@ public:
     void update(const aiwc::frame& f) override;
     void finish() override;
 
+//class members
+public:
+    GameState gameState;
+
+
+//class methods
+public:
+    static GameState decideGameState(std::size_t gamestate, bool ballownership);
+    static std::string gameStateToString(const GameState &gamestate);
 
 };
 
