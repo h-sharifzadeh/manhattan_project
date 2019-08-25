@@ -26,12 +26,16 @@ public:
 //class members
 public:
     GameState gameState;
+    WorldModel worldModel;
+    WorldModel lastWorldModel;
 
 
 //class methods
 public:
     static GameState decideGameState(std::size_t gamestate, bool ballownership);
     static std::string gameStateToString(const GameState &gamestate);
+
+    void updateWorldModel(const aiwc::frame &f);
 
 };
 

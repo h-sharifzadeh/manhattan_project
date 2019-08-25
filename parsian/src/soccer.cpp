@@ -1,5 +1,5 @@
 #include "soccer.h"
-#include "geom/vector_2d.h"
+
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
 {
@@ -21,12 +21,18 @@ void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     //std::cout << "game state: " << gameStateToString(gameState) << std::endl;
-    //test geom
-    rcsc::Vector2D pos{2, 3};
-    std::cout << pos.length() << std::endl;
+
+    updateWorldModel(f);
+    //test worldmodel
+    std::cout << "ball pos: " <<worldModel.ball.pos.x << ", " << worldModel.ball.pos.y << std::endl;
+    std::cout << "ball vel: " <<worldModel.ball.vel.x << ", " << worldModel.ball.vel.y << std::endl;
+    std::cout << "oppGK pos: " <<worldModel.oppRobots[0].pos.x << ", " << worldModel.oppRobots[0].pos.y << std::endl;
+    std::cout << "oppGK vel: " <<worldModel.oppRobots[0].vel.x << ", " << worldModel.oppRobots[0].vel.y << std::endl;
+    std::cout << "-------------------------" << std::endl;
 
 
 
+    lastWorldModel = worldModel;
 }
 
 GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership)
@@ -105,6 +111,33 @@ std::string Soccer::gameStateToString(const GameState &gamestate) {
         case GameState::theirPenaltyKick:
             return "theirPenaltyKick";
     }
+}
+
+void Soccer::updateWorldModel(const aiwc::frame &f) {
+    //our robots
+    for(int i{}; i < 5; i++) //TODO remove 5
+    {
+        worldModel.ourRobots[i].pos.x = f.opt_coordinates->robots[0][i].x;
+        worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
+        worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
+        worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
+        worldModel.ourRobots[i].theta = f.opt_coordinates->robots[0][i].th;
+    }
+    //opp robots
+    for(int i{}; i < 5; i++) //TODO remove 5
+    {
+        worldModel.oppRobots[i].pos.x = f.opt_coordinates->robots[1][i].x;
+        worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
+        worldModel.oppRobots[i].vel = (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
+        worldModel.oppRobots[i].active = f.opt_coordinates->robots[1][i].active;
+        worldModel.oppRobots[i].theta = f.opt_coordinates->robots[1][i].th;
+    }
+    //ball
+    worldModel.ball.pos.x = f.opt_coordinates->ball.x;
+    worldModel.ball.pos.y = f.opt_coordinates->ball.y;
+    worldModel.ball.vel = (worldModel.ball.pos - lastWorldModel.ball.pos) * 20;// m/s(50 ms each frame)
+    worldModel.ball.active = true;
+    worldModel.ball.theta = 0;
 }
 
 
