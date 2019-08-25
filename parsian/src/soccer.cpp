@@ -1,4 +1,5 @@
 #include "soccer.h"
+#include "control.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
@@ -135,16 +136,6 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.active = true;
     worldModel.ball.theta = 0;
     worldModel.ball.angularVel = 0;
-}
-
-void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel)
-{
-    if(id < 0 || id > info.number_of_robots - 1)
-    {
-        std::cerr << "trying to set an out of index robot wheel" << std::endl;
-    }
-    wheels[2*id] = leftWheel;
-    wheels[2*id + 1] = rightWheel;
 }
 
 
