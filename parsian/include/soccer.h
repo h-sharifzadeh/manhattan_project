@@ -29,13 +29,18 @@ public:
     WorldModel worldModel;
     WorldModel lastWorldModel;
 
+    //control
+    std::array<double, 10> wheels;
+
 
 //class methods
 public:
     static GameState decideGameState(std::size_t gamestate, bool ballownership);
     static std::string gameStateToString(const GameState &gamestate);
-
     void updateWorldModel(const aiwc::frame &f);
+
+    //control
+    void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
 
 };
 

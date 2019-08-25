@@ -5,6 +5,8 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 {
     std::cout << "PARSIAN TEAM start" << std::endl;
     gameState = GameState::playOn;
+    for(int i{}; i <10; i++)
+        wheels[i] = 0;
 
 }
 
@@ -20,18 +22,18 @@ void Soccer::finish()
 void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
-    //std::cout << "game state: " << gameStateToString(gameState) << std::endl;
-
     updateWorldModel(f);
-    //test worldmodel
-    std::cout << "ball pos: " <<worldModel.ball.pos.x << ", " << worldModel.ball.pos.y << std::endl;
-    std::cout << "ball vel: " <<worldModel.ball.vel.x << ", " << worldModel.ball.vel.y << std::endl;
-    std::cout << "oppGK pos: " <<worldModel.oppRobots[0].pos.x << ", " << worldModel.oppRobots[0].pos.y << std::endl;
-    std::cout << "oppGK vel: " <<worldModel.oppRobots[0].vel.x << ", " << worldModel.oppRobots[0].vel.y << std::endl;
-    std::cout << "-------------------------" << std::endl;
+
+    //test robot wheel
+    set_robot_wheel(0, 2, -2);
+    set_robot_wheel(1, 2, 2);
+    set_robot_wheel(2, 2, -2);
+    set_robot_wheel(3, -2, -2);
+    set_robot_wheel(4, 2, -2);
 
 
 
+    set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
 }
 
@@ -138,6 +140,16 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.vel = (worldModel.ball.pos - lastWorldModel.ball.pos) * 20;// m/s(50 ms each frame)
     worldModel.ball.active = true;
     worldModel.ball.theta = 0;
+}
+
+void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel)
+{
+    if(id < 0 || id > 4)
+    {
+        std::cerr << "trying to set an out of index robot wheel" << std::endl;
+    }
+    wheels[2*id] = leftWheel;
+    wheels[2*id + 1] = rightWheel;
 }
 
 
