@@ -24,14 +24,6 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
-    //test robot wheel
-    set_robot_wheel(0, 2, -2);
-    set_robot_wheel(1, 2, 2);
-    set_robot_wheel(2, 2, -2);
-    set_robot_wheel(3, -2, -2);
-    set_robot_wheel(4, 2, -2);
-
-
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
@@ -144,7 +136,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
 
 void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel)
 {
-    if(id < 0 || id > 4)
+    if(id < 0 || id > info.number_of_robots - 1)
     {
         std::cerr << "trying to set an out of index robot wheel" << std::endl;
     }
