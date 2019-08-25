@@ -115,7 +115,7 @@ std::string Soccer::gameStateToString(const GameState &gamestate) {
 
 void Soccer::updateWorldModel(const aiwc::frame &f) {
     //our robots
-    for(int i{}; i < 5; i++) //TODO remove 5
+    for(size_t i{}; i < info.number_of_robots; i++)
     {
         worldModel.ourRobots[i].pos.x = f.opt_coordinates->robots[0][i].x;
         worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
@@ -124,7 +124,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.ourRobots[i].theta = f.opt_coordinates->robots[0][i].th;
     }
     //opp robots
-    for(int i{}; i < 5; i++) //TODO remove 5
+    for(size_t i{}; i < info.number_of_robots; i++)
     {
         worldModel.oppRobots[i].pos.x = f.opt_coordinates->robots[1][i].x;
         worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
