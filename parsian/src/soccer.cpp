@@ -1,14 +1,15 @@
 #include "soccer.h"
-
+#include "geom/vector_2d.h"
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
 {
     std::cout << "PARSIAN TEAM start" << std::endl;
+    gameState = GameState::playOn;
+
 }
 
 void Soccer::init()
 {
-    gameState = GameState::playOn;
 }
 
 void Soccer::finish()
@@ -19,7 +20,12 @@ void Soccer::finish()
 void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
-    std::cout << "game state: " << gameStateToString(gameState) << std::endl;
+    //std::cout << "game state: " << gameStateToString(gameState) << std::endl;
+    //test geom
+    rcsc::Vector2D pos{2, 3};
+    std::cout << pos.length() << std::endl;
+
+
 
 }
 
