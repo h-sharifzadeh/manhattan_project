@@ -11,6 +11,7 @@ add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
 include_directories(
   ../common
   ../geom
+  ../proto
   ../extlibs/autobahn-cpp
   ../extlibs/msgpack-c/include
   include
