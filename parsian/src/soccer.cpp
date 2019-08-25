@@ -116,6 +116,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
         worldModel.ourRobots[i].theta = f.opt_coordinates->robots[0][i].th;
+        worldModel.ourRobots[i].angularVel = (worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) * 20;// m/s(50 ms each frame)
     }
     //opp robots
     for(size_t i{}; i < info.number_of_robots; i++)
@@ -125,6 +126,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.oppRobots[i].vel = (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.oppRobots[i].active = f.opt_coordinates->robots[1][i].active;
         worldModel.oppRobots[i].theta = f.opt_coordinates->robots[1][i].th;
+        worldModel.oppRobots[i].angularVel = (worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta) * 20;// m/s(50 ms each frame)
     }
     //ball
     worldModel.ball.pos.x = f.opt_coordinates->ball.x;
@@ -132,6 +134,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.vel = (worldModel.ball.pos - lastWorldModel.ball.pos) * 20;// m/s(50 ms each frame)
     worldModel.ball.active = true;
     worldModel.ball.theta = 0;
+    worldModel.ball.angularVel = 0;
 }
 
 void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel)

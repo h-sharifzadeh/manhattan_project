@@ -25,7 +25,8 @@ struct Robot
     Vector2D vel{0, 0};
     std::size_t id{};
     bool active{true};
-    double theta{0};
+    double theta{};
+    double angularVel{};
 };
 
 struct WorldModel
