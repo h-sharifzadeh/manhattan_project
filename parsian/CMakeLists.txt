@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.1)
 project(parsian)
 
+add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
 set(_USE_PROTO ON)
 if (_USE_PROTO)
   add_definitions(-DUSE_PROTO)
-  find_package(Protobuf REQUIRED)
-  include_directories(../proto)
+  INCLUDE(FindProtobuf)
+  FIND_PACKAGE(Protobuf REQUIRED)
+  PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER ../proto/messages_parsian_worldmodel.proto)
+  ADD_LIBRARY(proto ${PROTO_HEADER} ${PROTO_SRC})
+  include_directories(
+      ${CMAKE_CURRENT_BINARY_DIR}
+      ../proto
+      ${PROTOBUF_INCLUDE_DIR}
+      ${PROTOBUF_INCLUDE_DIR}/../../
+  )
+  TARGET_LINK_LIBRARIES(parsian proto ${PROTOBUF_LIBRARY})
 endif ()
 
 find_package(Threads REQUIRED)
@@ -14,7 +24,6 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS random regex system thread) # VC require regex, don't know why
 
-add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
 include_directories(
   ../common
   ../geom
