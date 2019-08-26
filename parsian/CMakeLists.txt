@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.1)
 project(parsian)
 
+set(_USE_PROTO ON)
+if (_USE_PROTO)
+  add_definitions(-DUSE_PROTO)
+  find_package(Protobuf REQUIRED)
+  include_directories(../proto)
+endif ()
+
 find_package(Threads REQUIRED)
 
 set(Boost_USE_MULTITHREADED ON)
