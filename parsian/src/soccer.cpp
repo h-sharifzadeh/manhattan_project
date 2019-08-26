@@ -1,4 +1,5 @@
 #include "soccer.h"
+#include "myprotobuf.h"
 #include "control.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
@@ -25,6 +26,7 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
+    sendWorldModelMessage();
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;

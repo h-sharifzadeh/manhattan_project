@@ -1,3 +1,6 @@
+#ifndef SOCCER_H
+#define SOCCER_H
+
 #include "ai_base.hpp"
 
 #include <boost/lexical_cast.hpp>
@@ -10,7 +13,6 @@
 #include <algorithm>
 
 #include "dataStructure.h"
-
 
 class Soccer: public aiwc::ai_base
 {
@@ -45,3 +47,4 @@ public:
 };
 
 
+#endif //SOCCER_H
