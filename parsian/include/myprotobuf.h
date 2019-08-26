@@ -7,12 +7,52 @@
 
 #include <iostream>
 #include "messages_parsian_worldmodel.pb.h"
-WorldModelProto wm{};
-void sendWorldModelMessage(const WorldModel& worldmodel)
-{
 
+WorldModelProto* twm = new(WorldModelProto);
+
+void vec2D2vec2D(const rcsc::Vector2D& v1, Vector2DProto* v2) {
+    v2->set_x(v1.getX());
+    v2->set_y(v1.getY());
 }
 
+void fillMessage(const WorldModel& worldmodel)
+{
+    twm->set_blue(false);
+    twm->set_gamestate(GameStateProto::PlayOn);
+    twm->set_mode("kianMode");
+    MovingObjectProto* moball = twm->mutable_ball();
+    moball->set_id(0);
+    moball->set_direction(0);
+    moball->set_angulevelocity(0);
+    vec2D2vec2D(worldmodel.ball.pos, moball->mutable_pos());
+    vec2D2vec2D(worldmodel.ball.vel, moball->mutable_vel());
+    vec2D2vec2D(rcsc::Vector2D{0, 0}, moball->mutable_acc());
+    for (int i = 0; i < worldmodel.ourRobots.size(); i++) {
+        MovingObjectProto* ourR = twm->add_our_robots();
+        const Robot& wor = worldmodel.ourRobots[i];
+        ourR->set_id(wor.id);
+        ourR->set_angulevelocity(wor.angularVel);
+        ourR->set_direction(wor.theta);
+        vec2D2vec2D(wor.pos, ourR->mutable_pos());
+        vec2D2vec2D(wor.vel, ourR->mutable_vel());
+        vec2D2vec2D(rcsc::Vector2D{0, 0}, ourR->mutable_acc());
+
+        MovingObjectProto* oppR = twm->add_opp_robots();
+        const Robot& wopr = worldmodel.oppRobots[i];
+        oppR->set_id(wopr.id);
+        oppR->set_angulevelocity(wopr.angularVel);
+        oppR->set_direction(wopr.theta);
+        vec2D2vec2D(wopr.pos, oppR->mutable_pos());
+        vec2D2vec2D(wopr.vel, oppR->mutable_vel());
+        vec2D2vec2D(rcsc::Vector2D{0, 0}, oppR->mutable_acc());
+
+    }
+}
+
+void sendWorldModelMessage(const WorldModel& worldmodel)
+{
+    fillMessage(worldmodel);
+}
 
 
 #endif //USE_PROTO

@@ -26,10 +26,10 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
-    sendWorldModelMessage(worldModel);
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
+    sendWorldModelMessage(worldModel);
 }
 
 GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership)
