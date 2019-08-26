@@ -26,7 +26,7 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
-    sendWorldModelMessage();
+    sendWorldModelMessage(worldModel);
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;

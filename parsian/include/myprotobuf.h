@@ -2,14 +2,15 @@
 #define PARSIAN_MYPROTOBUF_H
 
 #ifndef USE_PROTO
-    void sendWorldModelMessage(){}
+    void sendWorldModelMessage(const WorldModel& worldmodel){}
 #else
 
 #include <iostream>
 #include "messages_parsian_worldmodel.pb.h"
-void sendWorldModelMessage()
+WorldModelProto wm{};
+void sendWorldModelMessage(const WorldModel& worldmodel)
 {
-    std::cout << "proto" << std::endl;
+
 }
 
 
