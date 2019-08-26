@@ -3,12 +3,38 @@
 
 #ifndef USE_PROTO
     void sendWorldModelMessage(const WorldModel& worldmodel){}
+    void initServer(){}
 #else
 
 #include <iostream>
+#include <string>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include "messages_parsian_worldmodel.pb.h"
 
 WorldModelProto* twm = new(WorldModelProto);
+int thisSocket;
+struct sockaddr_in destination;
+
+void initServer()
+{
+    destination.sin_family = AF_INET;
+	thisSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (thisSocket < 0)
+		std::cerr << "Socket Creation FAILED!" << std::endl;
+
+    destination.sin_port = htons(13374);
+    destination.sin_addr.s_addr = inet_addr("127.0.0.1");
+    if (connect(thisSocket,(struct sockaddr *)&destination,sizeof(destination))!=0)
+    {
+        std::cerr << "Socket Connection FAILED!" << std::endl;
+        if (thisSocket) close(thisSocket);
+    }
+    std::cout << "Socket Connection SUCCEED" << std::endl;
+	//close(thisSocket)
+}
 
 void vec2D2vec2D(const rcsc::Vector2D& v1, Vector2DProto* v2) {
     v2->set_x(v1.getX());
@@ -52,6 +78,13 @@ void fillMessage(const WorldModel& worldmodel)
 void sendWorldModelMessage(const WorldModel& worldmodel)
 {
     fillMessage(worldmodel);
+    std::string str;
+	str.resize(twm->ByteSize());
+	if (twm->SerializePartialToString(&str))
+	{
+		//send data over network
+        send(thisSocket, str.c_str(), str.size(), 0);
+    }
 }
 
 

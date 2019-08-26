@@ -9,6 +9,7 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
     gameState = GameState::playOn;
     for(int i{}; i <10; i++)
         wheels[i] = 0;
+    initServer();
 
 }
 
