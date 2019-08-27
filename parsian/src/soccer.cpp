@@ -1,6 +1,7 @@
 #include "soccer.h"
 #include "myprotobuf.h"
 #include "control.h"
+#include "ai.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
@@ -15,6 +16,7 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 
 void Soccer::init()
 {
+    last_point = {info.field[0],0};
 }
 
 void Soccer::finish()
@@ -26,8 +28,7 @@ void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
-
-
+    decide();
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
@@ -119,7 +120,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
         worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
-        worldModel.ourRobots[i].theta = f.opt_coordinates->robots[0][i].th;
+        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(f.opt_coordinates->robots[0][i].th * rcsc::AngleDeg::RAD2DEG);
         worldModel.ourRobots[i].angularVel = (worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) * 20;// m/s(50 ms each frame)
     }
     //opp robots

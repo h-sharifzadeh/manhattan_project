@@ -29,9 +29,6 @@
 
 /////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-
-
 #include "rect_2d.h"
 #include <cmath>
 #include "segment_2d.h"

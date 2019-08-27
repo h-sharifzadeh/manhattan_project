@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 project(parsian)
 
-add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
-set(_USE_PROTO OFF)
+add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp ../geom/geom/angle_deg.cpp  include/knowledge.h)
+set(_USE_PROTO ON)
 if (_USE_PROTO)
   add_definitions(-DUSE_PROTO)
   INCLUDE(FindProtobuf)

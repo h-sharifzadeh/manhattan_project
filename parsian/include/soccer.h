@@ -11,6 +11,8 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <geom/rect_2d.h>
+#include "geom/vector_2d.h"
 
 #include "dataStructure.h"
 
@@ -41,8 +43,19 @@ public:
     static std::string gameStateToString(const GameState &gamestate);
     void updateWorldModel(const aiwc::frame &f);
 
-    //control
+    // control
     void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
+    void set_robot_vel(std::size_t id, double vel_f, double vel_w);
+    double look_at(std::size_t id,rcsc::Vector2D pos);
+    void gotopoint(std::size_t id,rcsc::Vector2D pos);
+    // ai
+    void decide();
+
+    rcsc::Vector2D last_point;
+    // const
+
+  //  const rcsc::Rect2D Feild = rcsc::Rect2D(-info.field[0]/2,-info.field[1]/2,info.field[0],info.field[1]);
+
 
 };
 
