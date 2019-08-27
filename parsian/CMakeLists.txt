@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(parsian)
 
 add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
-set(_USE_PROTO ON)
+set(_USE_PROTO OFF)
 if (_USE_PROTO)
   add_definitions(-DUSE_PROTO)
   INCLUDE(FindProtobuf)
