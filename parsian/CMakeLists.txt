@@ -27,7 +27,7 @@ find_package(Boost REQUIRED COMPONENTS random regex system thread) # VC require 
 include_directories(
   ../common
   ../geom
-  ../extlibs/autobahn-cpp
+  ../extlibs/autobahn-cpp/include
   ../extlibs/msgpack-c/include
   include
   ${Boost_INCLUDE_DIRS}
