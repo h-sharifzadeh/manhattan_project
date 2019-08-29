@@ -115,6 +115,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     //our robots
     for(size_t i{}; i < info.number_of_robots; i++)
     {
+        worldModel.ourRobots[i].id = i;
         worldModel.ourRobots[i].pos.x = f.opt_coordinates->robots[0][i].x;
         worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
         worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
@@ -125,6 +126,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     //opp robots
     for(size_t i{}; i < info.number_of_robots; i++)
     {
+        worldModel.oppRobots[i].id = i;
         worldModel.oppRobots[i].pos.x = f.opt_coordinates->robots[1][i].x;
         worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
         worldModel.oppRobots[i].vel = (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)

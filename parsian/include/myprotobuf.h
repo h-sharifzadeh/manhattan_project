@@ -58,6 +58,7 @@ void fillMessage(const WorldModel& worldmodel)
     for (int i = 0; i < worldmodel.ourRobots.size(); i++) {
         MovingObjectProto* ourR = twm->add_our_robots();
         const Robot& wor = worldmodel.ourRobots[i];
+        std::cout << worldmodel.ourRobots[i].id << std::endl;
         ourR->set_id(wor.id);
         ourR->set_angulevelocity(wor.angularVel);
         ourR->set_direction(wor.theta);
@@ -85,7 +86,7 @@ void sendWorldModelMessage(const WorldModel& worldmodel)
 	if (twm->SerializePartialToString(&str))
 	{
 		//send data over network
-        std::cout << send(thisSocket, str.c_str(), str.size(), 0) << std::endl;
+        send(thisSocket, str.c_str(), str.size(), 0);
         //std::cout << twm->DebugString();
     }
 }
