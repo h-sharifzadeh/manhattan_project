@@ -10,6 +10,22 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
     for(int i{}; i <10; i++)
         wheels[i] = 0;
     initServer();
+    //control
+    #ifdef USE_DEBUG
+    std::ifstream pid;
+    for(int i{}; i < 5; i++)
+    {
+        pid.open("pid.txt", std::_S_in);
+        std::string title;
+        pid >> title;
+        pid >> PID_velN[i].kp >> PID_velN[i].ki >> PID_velN[i].kd;
+        pid >> title;
+        pid >> PID_ang[i].kp >> PID_ang[i].ki >> PID_ang[i].kd;
+        pid >> title;
+        pid >> PID_pos[i].kp >> PID_pos[i].ki >> PID_pos[i].kd;
+        pid.close();
+    }
+    #else
     for(int i{}; i < 5; i++)
     {
         PID_velN[i].kp =  .6;
@@ -20,6 +36,7 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
         PID_ang[i].kd =  0.00001;
         PID_ang[i].ki =  0.000001;
     }
+    #endif
 
 
 }

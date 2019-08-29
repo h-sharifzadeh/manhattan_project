@@ -11,6 +11,7 @@
 #include <random>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 #include "pid.h"
 #include "dataStructure.h"
@@ -36,6 +37,7 @@ public:
     std::array<double, 10> wheels;
     PID PID_velN[5];
     PID PID_ang[5];
+    PID PID_pos[5];
 
 
 //class methods

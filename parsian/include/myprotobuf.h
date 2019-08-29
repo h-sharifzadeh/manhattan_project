@@ -1,7 +1,7 @@
 #ifndef PARSIAN_MYPROTOBUF_H
 #define PARSIAN_MYPROTOBUF_H
 
-#ifndef USE_PROTO
+#ifndef USE_DEBUG
     void sendWorldModelMessage(const WorldModel& worldmodel){}
     void initServer(){}
 #else
