@@ -3,7 +3,7 @@ project(parsian)
 
 FILE(GLOB geom ../geom/geom/*.cpp)
 
-add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp ${geom})
+add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp ${geom} include/pid.h)
 set(_USE_PROTO ON)
 if (_USE_PROTO)
   add_definitions(-DUSE_PROTO)

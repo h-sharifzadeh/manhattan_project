@@ -10,6 +10,17 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
     for(int i{}; i <10; i++)
         wheels[i] = 0;
     initServer();
+    for(int i{}; i < 5; i++)
+    {
+        PID_velN[i].kp =  .6;
+        PID_velN[i].kd =  .12;
+        PID_velN[i].ki =  .02;
+
+        PID_ang[i].kp =  .0002;
+        PID_ang[i].kd =  0.00001;
+        PID_ang[i].ki =  0.000001;
+    }
+
 
 }
 
@@ -27,6 +38,7 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
+    set_robot_vel(2, 0, 60);
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
@@ -120,8 +132,8 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
         worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
-        worldModel.ourRobots[i].theta = f.opt_coordinates->robots[0][i].th;
-        worldModel.ourRobots[i].angularVel = (worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) * 20;// m/s(50 ms each frame)
+        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(f.opt_coordinates->robots[0][i].th * rcsc::AngleDeg::RAD2DEG);
+        worldModel.ourRobots[i].angularVel = rcsc::AngleDeg::normalize_angle(worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) * 20;// deg/s(50 ms each frame)
     }
     //opp robots
     for(size_t i{}; i < info.number_of_robots; i++)
@@ -131,8 +143,8 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
         worldModel.oppRobots[i].vel = (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.oppRobots[i].active = f.opt_coordinates->robots[1][i].active;
-        worldModel.oppRobots[i].theta = f.opt_coordinates->robots[1][i].th;
-        worldModel.oppRobots[i].angularVel = (worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta) * 20;// m/s(50 ms each frame)
+        worldModel.oppRobots[i].theta = rcsc::AngleDeg::normalize_angle(f.opt_coordinates->robots[1][i].th * rcsc::AngleDeg::RAD2DEG);
+        worldModel.oppRobots[i].angularVel = rcsc::AngleDeg::normalize_angle(worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta)*20;// deg/s(50 ms each frame)
     }
     //ball
     worldModel.ball.pos.x = f.opt_coordinates->ball.x;
@@ -142,5 +154,4 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.theta = 0;
     worldModel.ball.angularVel = 0;
 }
-
 

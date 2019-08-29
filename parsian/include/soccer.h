@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "pid.h"
 #include "dataStructure.h"
 
 class Soccer: public aiwc::ai_base
@@ -33,6 +34,8 @@ public:
 
     //control
     std::array<double, 10> wheels;
+    PID PID_velN[5];
+    PID PID_ang[5];
 
 
 //class methods
@@ -43,6 +46,7 @@ public:
 
     //control
     void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
+    void set_robot_vel(std::size_t id, double vel_f, double angle);
 
 };
 

@@ -25,7 +25,7 @@ void initServer()
 	if (thisSocket < 0)
 		std::cerr << "Socket Creation FAILED!" << std::endl;
 
-    destination.sin_port = htons(13374);
+    destination.sin_port = htons(13375);
     destination.sin_addr.s_addr = inet_addr("127.0.0.1");
     if (connect(thisSocket,(struct sockaddr *)&destination,sizeof(destination))!=0)
     {
@@ -58,7 +58,6 @@ void fillMessage(const WorldModel& worldmodel)
     for (int i = 0; i < worldmodel.ourRobots.size(); i++) {
         MovingObjectProto* ourR = twm->add_our_robots();
         const Robot& wor = worldmodel.ourRobots[i];
-        std::cout << worldmodel.ourRobots[i].id << std::endl;
         ourR->set_id(wor.id);
         ourR->set_angulevelocity(wor.angularVel);
         ourR->set_direction(wor.theta);
@@ -87,7 +86,6 @@ void sendWorldModelMessage(const WorldModel& worldmodel)
 	{
 		//send data over network
         send(thisSocket, str.c_str(), str.size(), 0);
-        //std::cout << twm->DebugString();
     }
 }
 
