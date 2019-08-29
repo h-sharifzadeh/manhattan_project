@@ -33,7 +33,6 @@
 #include <config.h>
 #endif
 
-#include "stdafx.h"
 #include "angle_deg.h"
 #include <algorithm>
 #include <vector>

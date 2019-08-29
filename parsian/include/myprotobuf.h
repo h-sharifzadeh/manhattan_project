@@ -43,6 +43,8 @@ void vec2D2vec2D(const rcsc::Vector2D& v1, Vector2DProto* v2) {
 
 void fillMessage(const WorldModel& worldmodel)
 {
+    delete twm;
+    twm = new(WorldModelProto);
     twm->set_blue(false);
     twm->set_gamestate(GameStateProto::PlayOn);
     twm->set_mode("kianMode");
@@ -83,7 +85,8 @@ void sendWorldModelMessage(const WorldModel& worldmodel)
 	if (twm->SerializePartialToString(&str))
 	{
 		//send data over network
-        send(thisSocket, str.c_str(), str.size(), 0);
+        std::cout << send(thisSocket, str.c_str(), str.size(), 0) << std::endl;
+        //std::cout << twm->DebugString();
     }
 }
 

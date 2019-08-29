@@ -32,7 +32,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "stdafx.h"
 #include "circle_2d.h"
 #include "triangle_2d.h"
 #include "segment_2d.h"

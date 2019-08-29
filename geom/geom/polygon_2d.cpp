@@ -27,7 +27,6 @@
  *EndCopyright:
  */
 
-#include "stdafx.h"
 
 
 #include "polygon_2d.h"

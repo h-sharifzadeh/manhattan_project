@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include "stdafx.h"
 #include "convex_hull.h"
 #include "triangle_2d.h"
 

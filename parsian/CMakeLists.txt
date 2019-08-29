@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.1)
 project(parsian)
 
-add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp)
+FILE(GLOB geom ../geom/geom/*.cpp)
+
+add_executable(parsian ../common/ai_base.cpp src/main.cpp src/soccer.cpp ${geom})
 set(_USE_PROTO ON)
 if (_USE_PROTO)
   add_definitions(-DUSE_PROTO)
