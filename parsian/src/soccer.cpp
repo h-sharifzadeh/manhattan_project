@@ -11,7 +11,7 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
         wheels[i] = 0;
     initServer();
     //control
-    #ifdef USE_DEBUG
+    #ifdef USE_DEBUG1
     std::ifstream pid;
     for(int i{}; i < 5; i++)
     {
@@ -32,9 +32,9 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
         PID_velN[i].kd =  .12;
         PID_velN[i].ki =  .02;
 
-        PID_ang[i].kp =  .0002;
-        PID_ang[i].kd =  0.00001;
-        PID_ang[i].ki =  0.000001;
+        PID_ang[i].kp =  20 / 10000.0;
+        PID_ang[i].kd =  .2 / 10000.0;
+        PID_ang[i].ki =  .1 / 10000.0;
     }
     #endif
 
@@ -56,7 +56,6 @@ void Soccer::update(const aiwc::frame &f)
     updateWorldModel(f);
 
     set_robot_vel(2, 0, 60);
-
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
