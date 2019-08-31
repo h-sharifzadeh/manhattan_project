@@ -1,3 +1,6 @@
+
+#include <soccer.h>
+
 #include "soccer.h"
 #include "myprotobuf.h"
 #include "control.h"
@@ -26,15 +29,25 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
         pid.close();
     }
     #else
-    for(int i{}; i < 5; i++)
-    {
-        PID_velN[i].kp =  .6;
-        PID_velN[i].kd =  .12;
-        PID_velN[i].ki =  .02;
 
-        PID_ang[i].kp =  20 / 10000.0;
-        PID_ang[i].kd =  .2 / 10000.0;
-        PID_ang[i].ki =  .1 / 10000.0;
+    PID_ang[0].kp =   1.6 / 100.0;
+    PID_ang[0].kd =  .35 / 100.0;
+    PID_ang[0].ki =  .0 / 100.0;
+
+    PID_pos[0].kp =   14.2 ;
+    PID_pos[0].kd =   3.3 ;
+    PID_pos[0].ki =   0 ;
+
+
+    for(int i{1}; i < 5; i++)
+    {
+        PID_ang[i].kp =   2 / 100.0;
+        PID_ang[i].kd =  .4 / 100.0;
+        PID_ang[i].ki =  .0 / 100.0;
+
+        PID_pos[i].kp =   20 ;
+        PID_pos[i].kd =   5 ;
+        PID_pos[i].ki =   0 ;
     }
     #endif
 
@@ -54,8 +67,21 @@ void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
-
-    set_robot_vel(2, 0, 60);
+    gotopoint(1,{2,-1});
+//    gotopoint(0,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(0).pos * .5);
+//    gotopoint(1,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(1).pos * .5);
+//    gotopoint(2,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(2).pos * .5);
+//    gotopoint(3,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(3).pos * .5);
+//    gotopoint(4,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(4).pos * .5);
+//    gotopoint(0,worldModel.ball.pos);
+//    gotopoint(1,worldModel.ball.pos);
+    kick(2,worldModel.ball.pos);
+    kick(3,worldModel.ball.pos);
+//    gotopoint(4,worldModel.ball.pos);
+//    set_robot_vel(1,0,3);
+//    set_robot_vel(2,0,6);
+//    set_robot_vel(3,0,12);
+//    set_robot_vel(4,0,30);
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
@@ -170,4 +196,6 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.theta = 0;
     worldModel.ball.angularVel = 0;
 }
+
+
 
