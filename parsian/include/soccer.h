@@ -50,8 +50,9 @@ public:
     void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
     void set_robot_vel(std::size_t id, double vel_f, double angle,double max_vel);
     void gotopoint(std::size_t id,rcsc::Vector2D pos,double theta = 0);
-    void kick(std::size_t id,rcsc::Vector2D pos,double theta = 0);
-};
+    void onetouch(std::size_t id,rcsc::Vector2D pos,double theta = 0);
+    void kick(int id, const rcsc::Vector2D&  targetPos);
+    };
 
 
 #endif //SOCCER_H

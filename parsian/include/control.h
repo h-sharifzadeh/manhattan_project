@@ -2,6 +2,8 @@
 #define PARSIAN_CONTROL_H
 
 #include "soccer.h"
+#include "geom/circle_2d.h"
+#include "geom/ray_2d.h"
 
 
 void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel) {
@@ -53,7 +55,7 @@ void Soccer::gotopoint(std::size_t id, rcsc::Vector2D pos,double theta) {
     thr = fmin(thr, 15);
     thr = fmax(thr,3);
 
-    auto abs_error = abs(rcsc::AngleDeg::normalize_angle(dir - worldModel.ourRobots[id].theta));
+    auto abs_error = fabs(rcsc::AngleDeg::normalize_angle(dir - worldModel.ourRobots[id].theta));
     double normal_vel = PID_pos[id].run(error);
     normal_vel = ((abs_error < thr || (180 - abs_error) < thr) ? normal_vel : 0);
 
@@ -68,7 +70,7 @@ void Soccer::gotopoint(std::size_t id, rcsc::Vector2D pos,double theta) {
 }
 
 
-void Soccer::kick(std::size_t id, rcsc::Vector2D pos,double theta) {
+void Soccer::onetouch(std::size_t id, rcsc::Vector2D pos,double theta) {
     auto dir = rcsc::AngleDeg::normalize_angle((worldModel.ourRobots[id].pos - pos).dir().degree());
     auto error = worldModel.ourRobots[id].pos.dist(pos);
 //    auto thr = error * 5;
@@ -77,7 +79,7 @@ void Soccer::kick(std::size_t id, rcsc::Vector2D pos,double theta) {
     thr = fmin(thr, 15);
     thr = fmax(thr,3);
 
-    auto abs_error = abs(rcsc::AngleDeg::normalize_angle(dir - worldModel.ourRobots[id].theta));
+    auto abs_error = fabs(rcsc::AngleDeg::normalize_angle(dir - worldModel.ourRobots[id].theta));
     double normal_vel = PID_pos[id].run(error);
     normal_vel = ((abs_error < thr || (180 - abs_error) < thr) ? normal_vel : 0);
 
@@ -95,5 +97,38 @@ void Soccer::kick(std::size_t id, rcsc::Vector2D pos,double theta) {
     set_robot_vel(id, normal_vel, dir,max_vel);
 }
 
+void Soccer::kick(int id, const rcsc::Vector2D&  targetPos) {
+
+    double ROBOT_WIDTH{info.robot_size[id]};
+    double ROBOT_HALF_WIDTH{ROBOT_WIDTH/2};
+    double Field_width{info.field[0]};
+    double Field_height{info.field[1]};
+
+
+    rcsc::Vector2D ballPos{ worldModel.ball.pos + worldModel.ball.vel*(15. / 5.) };
+    rcsc::Vector2D robotPos{ worldModel.ourRobots[id].pos + worldModel.ourRobots[id].vel*(5. / 5.) };
+    rcsc::Vector2D norm{ ballPos - targetPos };
+    norm = norm.normalize();
+    rcsc::Vector2D prependicular{ norm.rotatedVector(90) };
+    rcsc::Vector2D behindPos{ ballPos + norm * 20 };
+    rcsc::Vector2D avoidPos{ ballPos + prependicular * 20 };
+    rcsc::Circle2D robotArea{ robotPos, ROBOT_HALF_WIDTH*sqrt(2) };
+    rcsc::Vector2D sol1, sol2;
+    if (robotArea.intersection(rcsc::Ray2D{ ballPos, targetPos }, &sol1, &sol2) > 0)
+    {
+        if (avoidPos.x < -Field_width / 2 + ROBOT_WIDTH || avoidPos.x > Field_width / 2 + ROBOT_WIDTH || avoidPos.y < -Field_height / 2 + ROBOT_WIDTH || avoidPos.x > Field_height / 2 + ROBOT_WIDTH)
+            avoidPos = ballPos;
+        gotopoint(id, avoidPos);
+    }
+    else if (worldModel.ourRobots[id].pos.dist(behindPos) > 25)
+    {
+        if (avoidPos.x < -Field_width / 2 + ROBOT_WIDTH || avoidPos.x > Field_width / 2 + ROBOT_WIDTH || avoidPos.y < -Field_height / 2 + ROBOT_WIDTH || avoidPos.x > Field_height / 2 + ROBOT_WIDTH)
+            behindPos = ballPos;
+        gotopoint(id, behindPos);
+    }
+    else {
+        gotopoint(id, ballPos);
+    }
+}
 
 #endif //PARSIAN_CONTROL_H
