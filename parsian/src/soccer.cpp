@@ -70,7 +70,8 @@ void Soccer::update(const aiwc::frame &f)
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
-
+    Goalie(0);
+    kick(1, field.ourGoalCenter);
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;

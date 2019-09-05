@@ -124,12 +124,10 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 
         case AVOID:
             gotopoint(id, avoidPos);
-            std::cout << "avoid" << std::endl;
 
             break;
         case BEHIND:
             gotopoint(id, behindPos);
-            std::cout << "behind" << std::endl;
 
             break;
         case KICK:
@@ -140,7 +138,6 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 
             }else
                 gotopoint(id, ballPos, 5);
-            std::cout << "kikckkkkkk" << std::endl;
 
             break;
     }
