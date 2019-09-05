@@ -41,12 +41,12 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 
     for(int i{1}; i < 5; i++)
     {
-        PID_ang[i].kp =   2 / 100.0;
-        PID_ang[i].kd =  .4 / 100.0;
+        PID_ang[i].kp =   1.6 / 100.0;
+        PID_ang[i].kd =  .5 / 100.0;
         PID_ang[i].ki =  .0 / 100.0;
 
-        PID_pos[i].kp =   20 ;
-        PID_pos[i].kd =   5 ;
+        PID_pos[i].kp =   2.4 ;
+        PID_pos[i].kd =   0 ;
         PID_pos[i].ki =   0 ;
     }
     #endif
@@ -67,7 +67,7 @@ void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
-    gotopoint(1,{2,-1});
+//    gotopoint(1,{2,-1});
 //    gotopoint(0,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(0).pos * .5);
 //    gotopoint(1,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(1).pos * .5);
 //    gotopoint(2,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(2).pos * .5);
@@ -75,13 +75,17 @@ void Soccer::update(const aiwc::frame &f)
 //    gotopoint(4,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(4).pos * .5);
 //    gotopoint(0,worldModel.ball.pos);
 //    gotopoint(1,worldModel.ball.pos);
-    kick(2,worldModel.ball.pos);
-    kick(3,worldModel.ball.pos);
-//    gotopoint(4,worldModel.ball.pos);
-//    set_robot_vel(1,0,3);
-//    set_robot_vel(2,0,6);
-//    set_robot_vel(3,0,12);
-//    set_robot_vel(4,0,30);
+//    onetouch(1,worldModel.ball.pos);
+//    kick(1,worldModel.ball.pos);
+//    kick(2,worldModel.ball.pos);
+//    kick(3,worldModel.ball.pos);
+    kick(4,{info.field[0],0});
+//    gotopoint(2,{0,-1.4});
+//    th += 2;
+//    set_robot_vel(1,0,th,9);
+//    set_robot_vel(2,0,rcsc::AngleDeg::normalize_angle((worldModel.ourRobots.at(2).pos - worldModel.ball.pos).dir().degree()),9);
+//    set_robot_vel(3,0,80,9);
+//    set_robot_vel(4,0,30,9);
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
