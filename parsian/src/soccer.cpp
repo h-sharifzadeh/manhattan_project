@@ -7,15 +7,14 @@
 #include "strategy/goalie.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
-        : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
-{
+        : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath)) {
     std::cout << "PARSIAN TEAM start" << std::endl;
     gameState = GameState::playOn;
-    for(int i{}; i <10; i++)
+    for (int i{}; i < 10; i++)
         wheels[i] = 0;
     initServer();
     //control
-    #ifdef USE_DEBUG1
+#ifdef USE_DEBUG1
     std::ifstream pid;
     for(int i{}; i < 5; i++)
     {
@@ -29,28 +28,27 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
         pid >> PID_pos[i].kp >> PID_pos[i].ki >> PID_pos[i].kd;
         pid.close();
     }
-    #else
+#else
 
-    PID_ang[0].kp =   1.6 / 100.0;
-    PID_ang[0].kd =  .35 / 100.0;
-    PID_ang[0].ki =  .0 / 100.0;
+    PID_ang[0].kp = 1.6 / 100.0;
+    PID_ang[0].kd = .35 / 100.0;
+    PID_ang[0].ki = .0 / 100.0;
 
-    PID_pos[0].kp =   14.2 ;
-    PID_pos[0].kd =   3.3 ;
-    PID_pos[0].ki =   0 ;
+    PID_pos[0].kp = 2.2;
+    PID_pos[0].kd = .3;
+    PID_pos[0].ki = 0;
 
 
-    for(int i{1}; i < 5; i++)
-    {
-        PID_ang[i].kp =   1.6 / 100.0;
-        PID_ang[i].kd =  .5 / 100.0;
-        PID_ang[i].ki =  .0 / 100.0;
+    for (int i{1}; i < 5; i++) {
+        PID_ang[i].kp = 1.6 / 100.0;
+        PID_ang[i].kd = .5 / 100.0;
+        PID_ang[i].ki = .0 / 100.0;
 
-        PID_pos[i].kp =   2.4 ;
-        PID_pos[i].kd =   0 ;
-        PID_pos[i].ki =   0 ;
+        PID_pos[i].kp = 2.9;
+        PID_pos[i].kd = .3;
+        PID_pos[i].ki = 0;
     }
-    #endif
+#endif
 
 
 }
@@ -60,31 +58,26 @@ void Soccer::init()
     updateField();
 }
 
-void Soccer::finish()
-{
+void Soccer::finish() {
     std::cout << "PARSIAN TEAM finish" << std::endl;
 }
 
-void Soccer::update(const aiwc::frame &f)
-{
+void Soccer::update(const aiwc::frame &f) {
+    if (f.reset_reason == aiwc::GAME_START) {
+        lastBehinePos = {0, 0};
+    }
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
-
-    Goalie(0);
-    kick(1, field.ourGoalCenter);
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
 }
 
-GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership)
-{
+GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership) {
     GameState _gameState;
-    if(ballownership)
-    {
-        switch(gamestate)
-        {
+    if (ballownership) {
+        switch (gamestate) {
             case 0:
                 _gameState = GameState::playOn;
                 break;
@@ -104,11 +97,8 @@ GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership)
                 _gameState = GameState::playOn;
                 break;
         }
-    }
-    else
-    {
-        switch(gamestate)
-        {
+    } else {
+        switch (gamestate) {
             case 0:
                 _gameState = GameState::playOn;
                 break;
@@ -133,8 +123,7 @@ GameState Soccer::decideGameState(std::size_t gamestate, bool ballownership)
 }
 
 std::string Soccer::gameStateToString(const GameState &gamestate) {
-    switch(gamestate)
-    {
+    switch (gamestate) {
         case GameState::playOn:
             return "playOn";
         case GameState::ourKickOff:
@@ -158,26 +147,32 @@ std::string Soccer::gameStateToString(const GameState &gamestate) {
 
 void Soccer::updateWorldModel(const aiwc::frame &f) {
     //our robots
-    for(size_t i{}; i < info.number_of_robots; i++)
-    {
+    for (size_t i{}; i < info.number_of_robots; i++) {
         worldModel.ourRobots[i].id = i;
         worldModel.ourRobots[i].pos.x = f.opt_coordinates->robots[0][i].x;
         worldModel.ourRobots[i].pos.y = f.opt_coordinates->robots[0][i].y;
-        worldModel.ourRobots[i].vel = (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
+        worldModel.ourRobots[i].vel =
+                (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
-        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(f.opt_coordinates->robots[0][i].th * rcsc::AngleDeg::RAD2DEG);
-        worldModel.ourRobots[i].angularVel = rcsc::AngleDeg::normalize_angle(worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) * 20;// deg/s(50 ms each frame)
+        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(
+                f.opt_coordinates->robots[0][i].th * rcsc::AngleDeg::RAD2DEG);
+        worldModel.ourRobots[i].angularVel =
+                rcsc::AngleDeg::normalize_angle(worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) *
+                20;// deg/s(50 ms each frame)
     }
     //opp robots
-    for(size_t i{}; i < info.number_of_robots; i++)
-    {
+    for (size_t i{}; i < info.number_of_robots; i++) {
         worldModel.oppRobots[i].id = i;
         worldModel.oppRobots[i].pos.x = f.opt_coordinates->robots[1][i].x;
         worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
-        worldModel.oppRobots[i].vel = (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
+        worldModel.oppRobots[i].vel =
+                (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.oppRobots[i].active = f.opt_coordinates->robots[1][i].active;
-        worldModel.oppRobots[i].theta = rcsc::AngleDeg::normalize_angle(f.opt_coordinates->robots[1][i].th * rcsc::AngleDeg::RAD2DEG);
-        worldModel.oppRobots[i].angularVel = rcsc::AngleDeg::normalize_angle(worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta)*20;// deg/s(50 ms each frame)
+        worldModel.oppRobots[i].theta = rcsc::AngleDeg::normalize_angle(
+                f.opt_coordinates->robots[1][i].th * rcsc::AngleDeg::RAD2DEG);
+        worldModel.oppRobots[i].angularVel =
+                rcsc::AngleDeg::normalize_angle(worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta) *
+                20;// deg/s(50 ms each frame)
     }
     //ball
     worldModel.ball.pos.x = f.opt_coordinates->ball.x;
