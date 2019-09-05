@@ -4,6 +4,7 @@
 #include "soccer.h"
 #include "myprotobuf.h"
 #include "control.h"
+#include "strategy/goalie.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath))
@@ -56,6 +57,7 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 
 void Soccer::init()
 {
+    updateField();
 }
 
 void Soccer::finish()
@@ -67,25 +69,9 @@ void Soccer::update(const aiwc::frame &f)
 {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
-//    gotopoint(1,{2,-1});
-//    gotopoint(0,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(0).pos * .5);
-//    gotopoint(1,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(1).pos * .5);
-//    gotopoint(2,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(2).pos * .5);
-//    gotopoint(3,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(3).pos * .5);
-//    gotopoint(4,worldModel.ball.pos * 1.5 -  worldModel.ourRobots.at(4).pos * .5);
-//    gotopoint(0,worldModel.ball.pos);
-//    gotopoint(1,worldModel.ball.pos);
-//    onetouch(1,worldModel.ball.pos);
-//    kick(1,worldModel.ball.pos);
-//    kick(2,worldModel.ball.pos);
-//    kick(3,worldModel.ball.pos);
-    kick(4,{info.field[0],0});
-//    gotopoint(2,{0,-1.4});
-//    th += 2;
-//    set_robot_vel(1,0,th,9);
-//    set_robot_vel(2,0,rcsc::AngleDeg::normalize_angle((worldModel.ourRobots.at(2).pos - worldModel.ball.pos).dir().degree()),9);
-//    set_robot_vel(3,0,80,9);
-//    set_robot_vel(4,0,30,9);
+
+
+
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);
@@ -201,5 +187,35 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     worldModel.ball.angularVel = 0;
 }
 
+void Soccer::updateField()
+{
+    field.cornerA = {(0 - info.field[0]*0.5), (0 + info.field[1]*0.5)};
+    field.cornerB = {(0 + info.field[0]*0.5), (0 + info.field[1]*0.5)};
+    field.cornerC = {(0 + info.field[0]*0.5), (0 - info.field[1]*0.5)};
+    field.cornerD = {(0 - info.field[0]*0.5), (0 - info.field[1]*0.5)};
+    field.ourGoalCenter = {(0 - info.field[0]*0.5), 0};
+    field.ourBigPenaltyA = field.ourGoalCenter + Vector2D{0, info.penalty_area[1]*0.5};
+    field.ourBigPenaltyB = field.ourGoalCenter + Vector2D{info.penalty_area[0], info.penalty_area[1]*0.5};
+    field.ourBigPenaltyC = field.ourGoalCenter + Vector2D{info.penalty_area[0], -info.penalty_area[1]*0.5};
+    field.ourBigPenaltyD = field.ourGoalCenter + Vector2D{0, -info.penalty_area[1]*0.5};
+    field.ourSmallPenaltyA = field.ourGoalCenter + Vector2D{0, info.goal_area[1]*0.5};
+    field.ourSmallPenaltyB = field.ourGoalCenter + Vector2D{info.goal_area[0], info.goal_area[1]*0.5};
+    field.ourSmallPenaltyC = field.ourGoalCenter + Vector2D{info.goal_area[0], -info.goal_area[1]*0.5};
+    field.ourSmallPenaltyD = field.ourGoalCenter + Vector2D{0, -info.goal_area[1]*0.5};
+    field.ourGoalU = field.ourGoalCenter + Vector2D{0, info.goal[1]*0.5};
+    field.ourGoalD = field.ourGoalCenter + Vector2D{0, -info.goal[1]*0.5};
+    field.center = {0, 0};
+    field.theirGoalCenter = {(0 + info.field[0]*0.5), 0};
+    field.theirBigPenaltyA = field.theirGoalCenter + Vector2D{-info.penalty_area[0], info.penalty_area[1]*0.5};
+    field.theirBigPenaltyB = field.theirGoalCenter + Vector2D{0, info.penalty_area[1]*0.5};
+    field.theirBigPenaltyC = field.theirGoalCenter + Vector2D{0, -info.penalty_area[1]*0.5};
+    field.theirBigPenaltyD = field.theirGoalCenter + Vector2D{-info.penalty_area[0], -info.penalty_area[1]*0.5};
+    field.theirSmallPenaltyA = field.theirGoalCenter + Vector2D{-info.goal_area[0], info.goal_area[1]*0.5};
+    field.theirSmallPenaltyB = field.theirGoalCenter + Vector2D{0, info.goal_area[1]*0.5};
+    field.theirSmallPenaltyC = field.theirGoalCenter + Vector2D{0, -info.goal_area[1]*0.5};
+    field.theirSmallPenaltyD = field.theirGoalCenter + Vector2D{-info.goal_area[0], -info.goal_area[1]*0.5};
+    field.theirGoalU = field.theirGoalCenter + Vector2D{0, info.goal[1]*0.5};
+    field.theirGoalD = field.theirGoalCenter + Vector2D{0, -info.goal[1]*0.5};
+}
 
 

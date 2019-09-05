@@ -32,6 +32,7 @@ public:
     GameState gameState;
     WorldModel worldModel;
     WorldModel lastWorldModel;
+    Field field;
 
     //control
     std::array<double, 10> wheels;
@@ -48,6 +49,7 @@ public:
     static GameState decideGameState(std::size_t gamestate, bool ballownership);
     static std::string gameStateToString(const GameState &gamestate);
     void updateWorldModel(const aiwc::frame &f);
+    void updateField();
 
     //control
     void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
@@ -55,8 +57,9 @@ public:
     void gotopoint(std::size_t id,rcsc::Vector2D pos,double max_vel = 1,double theta = 0);
     void onetouch(std::size_t id,rcsc::Vector2D pos,double theta = 0);
     void kick(int id, const rcsc::Vector2D&  targetPos);
-    ;
     double th = 10;
+
+    void Goalie(size_t id);
     };
 
 
