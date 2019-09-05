@@ -82,79 +82,31 @@ void Soccer::onetouch(std::size_t id, rcsc::Vector2D pos, double theta) {
 
 void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 
-    double ROBOT_WIDTH{info.robot_size[id]};
-    double ROBOT_HALF_WIDTH{ROBOT_WIDTH * 1};
-    if (state != STATE::AVOID)
-        ROBOT_HALF_WIDTH = {ROBOT_WIDTH * .5};
-    double Field_width{info.field[0]};
-    double Field_height{info.field[1]};
+    Vector2D ballPos{worldModel.ball.pos};
+    Vector2D behindBallPos{ballPos + (ballPos - targetPos).normalizedVector()*0.2};
+    double behindBallDeg{((ballPos - targetPos)*-1).dir().degree()};
+    validatePos(behindBallPos);
+
+    Vector2D avoidPos{(ballPos - targetPos).normalizedVector()*0.2};
+    if(ballPos.y > 0)
+        avoidPos = ballPos + avoidPos.rotate(90);
+    else
+        avoidPos = ballPos + avoidPos.rotate(-90);
+
+    validatePos(avoidPos);
 
 
-    rcsc::Vector2D ballPos{worldModel.ball.pos + worldModel.ball.vel * (.04)};
-    rcsc::Vector2D robotPos{worldModel.ourRobots[id].pos + worldModel.ourRobots[id].vel * (.005)};
-    rcsc::Vector2D norm{ballPos - targetPos};
-    norm = norm.normalize();
-    rcsc::Vector2D prependicular{norm.rotatedVector(90)};
-    rcsc::Vector2D behindPos{ballPos + norm * .4};
-    rcsc::Vector2D avoidPos{ballPos + prependicular * .3};
-    rcsc::Circle2D robotArea{robotPos, ROBOT_HALF_WIDTH * sqrt(2)};
-    rcsc::Vector2D sol1, sol2;
-    if (behindPosIsValid(targetPos)) {
-        behindPos = lastBehinePos;
-    } else {
-        lastBehinePos = behindPos;
-    }
-    if (robotArea.intersection(rcsc::Ray2D{ballPos, targetPos}, &sol1, &sol2) > 0) {
-        if (state == STATE::KICK) {
-            if (robotPos.x > worldModel.ball.pos.x)
-                state = STATE::AVOID;
-        } else
-            state = STATE::AVOID;
 
-    } else if (state != STATE::KICK) {
-        if (worldModel.ourRobots[id].pos.dist(behindPos) < .1)
-            state = STATE::KICK;
-        else
-            state = STATE::BEHIND;
-    } else
-        if (robotPos.x > worldModel.ball.pos.x + .1)
-            state = state = STATE::BEHIND;
-
-
-//    if (avoidPos.x < -Field_width / 2 + ROBOT_WIDTH || avoidPos.x > Field_width / 2 + ROBOT_WIDTH ||
-//        avoidPos.y < -Field_height / 2 + ROBOT_WIDTH || avoidPos.x > Field_height / 2 + ROBOT_WIDTH)
-//        state = STATE::KICK;
-
-    switch (state) {
-
-        case AVOID:
-            gotopoint(id, avoidPos);
-
-            break;
-        case BEHIND:
-            gotopoint(id, behindPos);
-
-            break;
-        case KICK:
-            if (ballPos.dist(robotPos) < .25) {
-                //fast kick
-
-                gotopoint(id, ballPos - norm * 10, 5);
-
-            } else
-                gotopoint(id, ballPos, 5);
-
-            break;
-    }
+    gotopoint(id, avoidPos, 1, 0);
 }
 
-bool Soccer::behindPosIsValid(const rcsc::Vector2D &targetPos) {
-    rcsc::Circle2D robotArea{lastBehinePos, .5};
-    rcsc::Vector2D ballPos{worldModel.ball.pos};
-    rcsc::Ray2D path{ballPos, targetPos};
-    rcsc::Vector2D sol1, sol2;
 
-    return !(robotArea.intersection(path, &sol1, &sol2) > 0 || lastBehinePos.dist(ballPos) > 1);
+
+void Soccer::validatePos(rcsc::Vector2D &targetPos) {
+    if(targetPos.x > info.field[0]/2)   targetPos.x = info.field[0]/2 - 0.08;
+    if(targetPos.x < -info.field[0]/2)   targetPos.x = -info.field[0]/2 + 0.08;
+    if(targetPos.y > info.field[1]/2)   targetPos.y = info.field[1]/2 - 0.08;
+    if(targetPos.y < -info.field[1]/2)   targetPos.y = -info.field[1]/2 + 0.08;
 }
 
 

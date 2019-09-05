@@ -69,6 +69,16 @@ void Soccer::update(const aiwc::frame &f) {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
+    gotopoint(2, field.cornerD);
+    gotopoint(3, field.cornerD);
+    gotopoint(4, field.cornerD);
+
+
+
+    Goalie(0);
+    kick(1, field.theirGoalCenter);
+
+
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);

@@ -59,7 +59,7 @@ public:
     void kick(int id, const rcsc::Vector2D&  targetPos);
     double th = 10;
     Vector2D lastBehinePos;
-    bool behindPosIsValid(const rcsc::Vector2D& targetPos);
+    void validatePos(rcsc::Vector2D &targetPos);
 
     void Goalie(size_t id);
 
