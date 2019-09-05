@@ -55,8 +55,8 @@ public:
     void gotopoint(std::size_t id,rcsc::Vector2D pos,double max_vel = 1,double theta = 0);
     void onetouch(std::size_t id,rcsc::Vector2D pos,double theta = 0);
     void kick(int id, const rcsc::Vector2D&  targetPos);
-    ;
-    double th = 10;
+    Vector2D lastBehinePos;
+    bool behindPosIsValid(const rcsc::Vector2D& targetPos);
     };
 
 
