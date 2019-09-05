@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "geom/vector_2d.h"
+#include "geom/rect_2d.h"
 
 using namespace rcsc;
 
@@ -66,7 +67,10 @@ struct Field
     Vector2D theirGoalU;
     Vector2D theirGoalD;
 
-
+    Rect2D ourBigPenalty;
+    Rect2D ourSmallPenalty;
+    Rect2D theirBigPenalty;
+    Rect2D theirSmallPenalty;
 
 };
 

@@ -216,6 +216,11 @@ void Soccer::updateField()
     field.theirSmallPenaltyD = field.theirGoalCenter + Vector2D{-info.goal_area[0], -info.goal_area[1]*0.5};
     field.theirGoalU = field.theirGoalCenter + Vector2D{0, info.goal[1]*0.5};
     field.theirGoalD = field.theirGoalCenter + Vector2D{0, -info.goal[1]*0.5};
+
+    field.ourBigPenalty = Rect2D(field.ourBigPenaltyA, field.ourBigPenaltyC);
+    field.ourSmallPenalty = Rect2D(field.ourSmallPenaltyA, field.ourSmallPenaltyC);
+    field.theirBigPenalty = Rect2D(field.theirBigPenaltyA, field.theirBigPenaltyC);
+    field.theirSmallPenalty = Rect2D(field.theirSmallPenaltyA, field.theirSmallPenaltyC);
 }
 
 
