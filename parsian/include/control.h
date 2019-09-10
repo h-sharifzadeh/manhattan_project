@@ -23,7 +23,7 @@ void Soccer::set_robot_vel(std::size_t id, double vel_f, double angle, double ma
 
     vel_f = fmin(vel_f, max_vel);
 
-    if (abs(error) > 90) {
+    if (fabs(error) > 90) {
         error = rcsc::AngleDeg::normalize_angle(angle + 180 - worldModel.ourRobots[id].theta);
         vel_f *= -1;
     }
@@ -41,7 +41,7 @@ void Soccer::set_robot_vel(std::size_t id, double vel_f, double angle, double ma
 
 
 void Soccer::gotopoint(std::size_t id, rcsc::Vector2D pos, double max_vel, double theta) {
-    auto dir = rcsc::AngleDeg::normalize_angle((worldModel.ourRobots[id].pos - pos).dir().degree());
+    auto dir = -rcsc::AngleDeg::normalize_angle((worldModel.ourRobots[id].pos - pos).dir().degree());
     auto error = worldModel.ourRobots[id].pos.dist(pos);
     auto thr = error * 9 + 9;
     thr = fmin(thr, 85);
@@ -85,12 +85,13 @@ void Soccer::onetouch(std::size_t id, rcsc::Vector2D pos, double theta) {
 
 void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 
+    Vector2D robotPos{worldModel.ourRobots[id].pos};
     Vector2D ballPos{worldModel.ball.pos};
-    Vector2D behindBallPos{ballPos + (ballPos - targetPos).normalizedVector()*0.2};
+    Vector2D behindBallPos{ballPos + (ballPos - targetPos).normalizedVector()*0.3};
     double behindBallDeg{((ballPos - targetPos)*-1).dir().degree()};
     validatePos(behindBallPos);
 
-    Vector2D avoidPos{(ballPos - targetPos).normalizedVector()*0.2};
+    Vector2D avoidPos{(ballPos - targetPos).normalizedVector()*0.3};
     if(ballPos.y > 0)
         avoidPos = ballPos + avoidPos.rotate(90);
     else
@@ -98,17 +99,31 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     validatePos(avoidPos);
 
     Polygon2D needAvoidArea{};
-    Vector2D frontBall{(ballPos + targetPos).normalizedVector()*0.2};
+    Vector2D frontBall{(ballPos + targetPos).normalizedVector()*0.05};
     double myDeg{(targetPos - ballPos).dir().radian()};
     double_t xDist{0.2 * sin(myDeg)};
     double_t yDist{0.2 * cos(myDeg)};
     needAvoidArea.addVertex({targetPos});
     needAvoidArea.addVertex(frontBall + Vector2D{-xDist, yDist});
     needAvoidArea.addVertex(frontBall + Vector2D{xDist, -yDist});
-    std::cout << needAvoidArea.contains(worldModel.ourRobots[4].pos) << std::endl;
+    //std::cout << needAvoidArea.contains(worldModel.ourRobots[4].pos) << std::endl;
+    if(robotPos.dist(behindBallPos) < 0.2)
+    {
+        std::cout << "targetPos" << std::endl;
+        gotopoint(id, targetPos);
+        return;
+    }
+    if(needAvoidArea.contains(robotPos))
+    {
+        std::cout << "avoidPos" << std::endl;
+        gotopoint(id, avoidPos, 1, 0);
+    }
+    else
+    {
+        std::cout << "behindPos" << std::endl;
+        gotopoint(id, behindBallPos, 1, behindBallDeg);
+    }
 
-
-    //gotopoint(id, avoidPos, 1, 0);
 }
 
 

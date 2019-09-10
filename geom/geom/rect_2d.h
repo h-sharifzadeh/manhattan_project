@@ -129,7 +129,7 @@ public:
           {
               M_top_left.x = bottom_right.x;
           }
-          if ( bottom_right.y - top_left.y > 0.0 )
+          if ( bottom_right.y - top_left.y < 0.0 )
           {
               M_top_left.y = bottom_right.y;
           }
@@ -654,7 +654,7 @@ public:
     */
     double bottom() const
       {
-          return top() - size().width();
+          return top() + size().width();
       }
 
     /*!
