@@ -2,8 +2,11 @@
 #define PARSIAN_CONTROL_H
 
 #include "soccer.h"
+
+#include <math.h>
 #include "geom/circle_2d.h"
 #include "geom/ray_2d.h"
+#include "geom/polygon_2d.h"
 
 
 void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel) {
@@ -92,12 +95,20 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
         avoidPos = ballPos + avoidPos.rotate(90);
     else
         avoidPos = ballPos + avoidPos.rotate(-90);
-
     validatePos(avoidPos);
 
+    Polygon2D needAvoidArea{};
+    Vector2D frontBall{(ballPos + targetPos).normalizedVector()*0.2};
+    double myDeg{(targetPos - ballPos).dir().radian()};
+    double_t xDist{0.2 * sin(myDeg)};
+    double_t yDist{0.2 * cos(myDeg)};
+    needAvoidArea.addVertex({targetPos});
+    needAvoidArea.addVertex(frontBall + Vector2D{-xDist, yDist});
+    needAvoidArea.addVertex(frontBall + Vector2D{xDist, -yDist});
+    std::cout << needAvoidArea.contains(worldModel.ourRobots[4].pos) << std::endl;
 
 
-    gotopoint(id, avoidPos, 1, 0);
+    //gotopoint(id, avoidPos, 1, 0);
 }
 
 
