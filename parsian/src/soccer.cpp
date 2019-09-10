@@ -70,6 +70,7 @@ void Soccer::update(const aiwc::frame &f) {
     updateWorldModel(f);
 
     kick(4, field.theirGoalCenter);
+    std::cout << worldModel.ball.pos << ", " << worldModel.ball.pos + worldModel.ball.vel.normalizedVector()*0.5 << std::endl;
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;

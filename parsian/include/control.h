@@ -85,8 +85,9 @@ void Soccer::onetouch(std::size_t id, rcsc::Vector2D pos, double theta) {
 
 void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 
+    static bool isLastState_TargetPos = false;
     Vector2D robotPos{worldModel.ourRobots[id].pos};
-    Vector2D ballPos{worldModel.ball.pos};
+    Vector2D ballPos{worldModel.ball.pos + worldModel.ball.vel.normalizedVector()*0.2};
     Vector2D behindBallPos{ballPos + (ballPos - targetPos).normalizedVector()*0.3};
     double behindBallDeg{((ballPos - targetPos)*-1).dir().degree()};
     validatePos(behindBallPos);
@@ -107,20 +108,24 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     needAvoidArea.addVertex(frontBall + Vector2D{-xDist, yDist});
     needAvoidArea.addVertex(frontBall + Vector2D{xDist, -yDist});
     //std::cout << needAvoidArea.contains(worldModel.ourRobots[4].pos) << std::endl;
-    if(robotPos.dist(behindBallPos) < 0.2)
+
+    double dist{isLastState_TargetPos ? 0.3 : 0.1};
+
+    if(robotPos.dist(behindBallPos) < dist)
     {
-        std::cout << "targetPos" << std::endl;
+        isLastState_TargetPos = true;
+        //std::cout << "targetPos" << std::endl;
         gotopoint(id, targetPos);
         return;
     }
     if(needAvoidArea.contains(robotPos))
     {
-        std::cout << "avoidPos" << std::endl;
+        //std::cout << "avoidPos" << std::endl;
         gotopoint(id, avoidPos, 1, 0);
     }
     else
     {
-        std::cout << "behindPos" << std::endl;
+        //std::cout << "behindPos" << std::endl;
         gotopoint(id, behindBallPos, 1, behindBallDeg);
     }
 
