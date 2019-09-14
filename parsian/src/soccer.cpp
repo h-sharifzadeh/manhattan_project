@@ -40,8 +40,8 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 
 
     for (int i{1}; i < 5; i++) {
-        PID_ang[i].kp = 1.6 / 100.0;
-        PID_ang[i].kd = .5 / 100.0;
+        PID_ang[i].kp = 5.5 / 100.0;
+        PID_ang[i].kd = 1.0 / 100.0;
         PID_ang[i].ki = .0 / 100.0;
 
         PID_pos[i].kp = 2.9;
@@ -69,8 +69,11 @@ void Soccer::update(const aiwc::frame &f) {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
+    set_robot_vel(1, 0, 60, 2);
+    set_robot_vel(2, 0, 20, 2);
+    set_robot_vel(3, 0, 90, 2);
+    //gotopoint(4, worldModel.ball.pos + lastWorldModel.ball.vel.normalizedVector()*0.05);
     kick(4, field.theirGoalCenter);
-    std::cout << worldModel.ball.pos << ", " << worldModel.ball.pos + worldModel.ball.vel.normalizedVector()*0.5 << std::endl;
 
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;

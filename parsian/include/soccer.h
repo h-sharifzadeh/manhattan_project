@@ -54,14 +54,15 @@ public:
     //control
     void set_robot_wheel(std::size_t id, double leftWheel, double rightWheel);
     void set_robot_vel(std::size_t id, double vel_f, double angle,double max_vel);
-    void gotopoint(std::size_t id,rcsc::Vector2D pos,double max_vel = 1,double theta = 0);
+    void gotopoint(std::size_t id,rcsc::Vector2D pos,double max_vel = 2.5,double theta = 0);
     void onetouch(std::size_t id,rcsc::Vector2D pos,double theta = 0);
     void kick(int id, const rcsc::Vector2D&  targetPos);
     double th = 10;
     Vector2D lastBehinePos;
     void validatePos(rcsc::Vector2D &targetPos);
+    bool behindPosIsValid(const rcsc::Vector2D &targetPos);
 
-    void Goalie(size_t id);
+        void Goalie(size_t id);
 
     };
 
