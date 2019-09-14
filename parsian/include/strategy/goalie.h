@@ -36,7 +36,7 @@ void Soccer::Goalie(size_t id)
     if (!forward) {
         gotopoint(id, targetPos, 1, 90);
     } else {
-        kick(id, field.theirGoalCenter);
+        onetouch(id, field.theirGoalCenter);
     }
 
     // SPIN

@@ -1,13 +1,8 @@
 #ifndef PARSIAN_CONTROL_H
 #define PARSIAN_CONTROL_H
 
-#include "soccer.h"
 
-#include <math.h>
-#include "geom/circle_2d.h"
-#include "geom/ray_2d.h"
-#include "geom/polygon_2d.h"
-#include "geom/segment_2d.h"
+
 
 
 void Soccer::set_robot_wheel(std::size_t id, double leftWheel, double rightWheel) {

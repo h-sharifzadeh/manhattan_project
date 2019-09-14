@@ -1,10 +1,16 @@
-
 #include <soccer.h>
 
-#include "soccer.h"
-#include "myprotobuf.h"
+#include <math.h>
+
 #include "control.h"
+#include "strategy/defence.h"
 #include "strategy/goalie.h"
+#include "strategy/support.h"
+#include "strategy/coach.h"
+#include "strategy/playmake.h"
+
+
+#include "myprotobuf.h"
 
 Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::string key, std::string datapath)
         : ai_base(std::move(server_ip), port, std::move(realm), std::move(key), std::move(datapath)) {
@@ -69,12 +75,12 @@ void Soccer::update(const aiwc::frame &f) {
     gameState = decideGameState(f.game_state, f.ball_ownership);
     updateWorldModel(f);
 
-    set_robot_vel(1, 0, 60, 2);
-    set_robot_vel(2, 0, 20, 2);
-    set_robot_vel(3, 0, 90, 2);
-    //gotopoint(4, worldModel.ball.pos + lastWorldModel.ball.vel.normalizedVector()*0.05);
-    kick(4, field.theirGoalCenter);
-
+//    set_robot_vel(1, 0, 60, 2);
+//    set_robot_vel(2, 0, 20, 2);
+//    set_robot_vel(3, 0, 90, 2);
+//    //gotopoint(4, worldModel.ball.pos + lastWorldModel.ball.vel.normalizedVector()*0.05);
+//    kick(4, field.theirGoalCenter);
+    execute();
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
     sendWorldModelMessage(worldModel);

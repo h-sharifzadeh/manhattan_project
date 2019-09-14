@@ -1,6 +1,9 @@
 #ifndef SOCCER_H
 #define SOCCER_H
 
+
+#include "pid.h"
+#include "dataStructure.h"
 #include "ai_base.hpp"
 
 #include <boost/lexical_cast.hpp>
@@ -13,8 +16,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include "pid.h"
-#include "dataStructure.h"
+
 
 class Soccer: public aiwc::ai_base
 {
@@ -57,13 +59,16 @@ public:
     void gotopoint(std::size_t id,rcsc::Vector2D pos,double max_vel = 2.5,double theta = 0);
     void onetouch(std::size_t id,rcsc::Vector2D pos,double theta = 0);
     void kick(int id, const rcsc::Vector2D&  targetPos);
-    double th = 10;
+    int attack_state ;
     Vector2D lastBehinePos;
     void validatePos(rcsc::Vector2D &targetPos);
     bool behindPosIsValid(const rcsc::Vector2D &targetPos);
 
-        void Goalie(size_t id);
-
+    void Goalie(size_t id);
+    void Defence(std::vector<size_t> ids);
+    void Support(std::vector<size_t> ids);
+    void Playmake(size_t id);
+    void execute();
     };
 
 
