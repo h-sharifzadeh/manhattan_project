@@ -46,8 +46,8 @@ Soccer::Soccer(std::string server_ip, std::size_t port, std::string realm, std::
 
 
     for (int i{1}; i < 5; i++) {
-        PID_ang[i].kp = 5.5 / 100.0;
-        PID_ang[i].kd = 1.0 / 100.0;
+        PID_ang[i].kp = 1.6 / 100.0;
+        PID_ang[i].kd = .3 / 100.0;
         PID_ang[i].ki = .0 / 100.0;
 
         PID_pos[i].kp = 2.9;
@@ -166,7 +166,7 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
         worldModel.ourRobots[i].vel =
                 (worldModel.ourRobots[i].pos - lastWorldModel.ourRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.ourRobots[i].active = f.opt_coordinates->robots[0][i].active;
-        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(
+        worldModel.ourRobots[i].theta = rcsc::AngleDeg::normalize_angle(-
                 f.opt_coordinates->robots[0][i].th * rcsc::AngleDeg::RAD2DEG);
         worldModel.ourRobots[i].angularVel =
                 rcsc::AngleDeg::normalize_angle(worldModel.ourRobots[i].theta - lastWorldModel.ourRobots[i].theta) *
@@ -176,14 +176,14 @@ void Soccer::updateWorldModel(const aiwc::frame &f) {
     for (size_t i{}; i < info.number_of_robots; i++) {
         worldModel.oppRobots[i].id = i;
         worldModel.oppRobots[i].pos.x = f.opt_coordinates->robots[1][i].x;
-        worldModel.oppRobots[i].pos.y = f.opt_coordinates->robots[1][i].y;
+        worldModel.oppRobots[i].pos.y = -f.opt_coordinates->robots[1][i].y;
         worldModel.oppRobots[i].vel =
                 (worldModel.oppRobots[i].pos - lastWorldModel.oppRobots[i].pos) * 20;// m/s(50 ms each frame)
         worldModel.oppRobots[i].active = f.opt_coordinates->robots[1][i].active;
         worldModel.oppRobots[i].theta = rcsc::AngleDeg::normalize_angle(
                 f.opt_coordinates->robots[1][i].th * rcsc::AngleDeg::RAD2DEG);
         worldModel.oppRobots[i].angularVel =
-                rcsc::AngleDeg::normalize_angle(worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta) *
+                rcsc::AngleDeg::normalize_angle(-worldModel.oppRobots[i].theta - lastWorldModel.oppRobots[i].theta) *
                 20;// deg/s(50 ms each frame)
     }
     //ball

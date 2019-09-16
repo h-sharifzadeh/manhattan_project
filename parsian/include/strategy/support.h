@@ -6,7 +6,7 @@
 #define PARSIAN_SUPPORT_H
 
 
-void Soccer::Support(std::vector<size_t> ids) {
+void Soccer::Support(std::vector<int> ids) {
     gotopoint(ids[0], {0, 0});
     if (ids.size() > 1) {
         gotopoint(ids[1], {1, 0});

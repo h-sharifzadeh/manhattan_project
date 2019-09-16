@@ -65,8 +65,8 @@ public:
     bool behindPosIsValid(const rcsc::Vector2D &targetPos);
 
     void Goalie(size_t id);
-    void Defence(std::vector<size_t> ids);
-    void Support(std::vector<size_t> ids);
+    void Defence(std::vector<int > ids);
+    void Support(std::vector<int> ids);
     void Playmake(size_t id);
     void execute();
     };
