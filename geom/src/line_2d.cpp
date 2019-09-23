@@ -54,8 +54,8 @@ Line2D::intersection( const Line2D & line1,
         return Vector2D::INVALIDATED;
     }
 
-    return Vector2D( (line1.b() * line2.c() - line2.b() * line1.c()) / tmp,
-                     (line2.a() * line1.c() - line1.a() * line2.c()) / tmp );
+    return Vector2D{ (line1.b() * line2.c() - line2.b() * line1.c()) / tmp,
+                     (line2.a() * line1.c() - line1.a() * line2.c()) / tmp };
 }
 
 /*-------------------------------------------------------------------*/
@@ -74,14 +74,14 @@ Line2D::perpendicular_bisector( const Vector2D & p1,
                   << " ***ERROR*** input points have same coordinate values "
                   << p1 << p2
                   << std::endl;
-        return Line2D( p1, Vector2D( p1.x + 1.0, p1.y ) );
+        return Line2D{ p1, Vector2D( p1.x + 1.0, p1.y ) };
     }
 
     double tmp = ( p2.x*p2.x - p1.x*p1.x
                    + p2.y*p2.y - p1.y*p1.y ) * -0.5 ;
-    return Line2D( p2.x - p1.x,
+    return Line2D{ p2.x - p1.x,
                    p2.y - p1.y,
-                   tmp );
+                   tmp };
 }
 
 }

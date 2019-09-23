@@ -79,7 +79,7 @@ public:
       This means that we can use this class as follows.
       AngleDeg angle = 3.0;
     */
-    AngleDeg( const double & deg )
+    explicit AngleDeg( const double & deg )
         : M_degree( deg )
       {
           normalize();
