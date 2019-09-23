@@ -1,5 +1,5 @@
-parsian/build
-parsian/cmake-build-debug
+build
+cmake-build-debug
 
 CMakeLists.txt.user
 CMakeCache.txt
