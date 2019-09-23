@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(DELFT_SOCCER)
 
+
 add_library(geom
         geom/src/angle_deg.cpp
         geom/src/vector_2d.cpp
