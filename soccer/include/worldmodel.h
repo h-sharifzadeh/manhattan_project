@@ -1,8 +1,7 @@
 #ifndef DELFT_SOCCER_WORLDMODEL_H
 #define DELFT_SOCCER_WORLDMODEL_H
 
-#include <vector_2d.h>
-#include <rect_2d.h>
+#include "geom.h"
 #include <array>
 
 using namespace rcsc;

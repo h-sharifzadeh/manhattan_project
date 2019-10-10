@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
-project(DELFT_SOCCER)
+project(parsian)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
+find_package(Threads REQUIRED)
+
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS random regex system thread) # VC require regex, don't know why
 
 add_library(geom
         geom/src/angle_deg.cpp
@@ -28,15 +34,18 @@ add_library(soccer
         soccer/src/roles/attacker.cpp
         soccer/src/roles/gk.cpp
         soccer/src/coach.cpp
-        soccer/include/field.h soccer/include/worldmodel.h soccer/include/gamestate.h)
+        soccer/src/field.cpp)
 
-add_executable(DELFT_SOCCER  soccer/src/main.cpp)
+add_executable(parsian
+        soccer/src/main.cpp
+        )
 
-find_package(Threads REQUIRED)
+target_link_libraries(soccer
+        geom)
 
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS random regex system thread) # VC require regex, don't know why
+add_dependencies(parsian
+        geom
+        soccer)
 
 include_directories(
         common
@@ -48,14 +57,32 @@ include_directories(
 )
 
 target_link_libraries(
-        DELFT_SOCCER
+        parsian
         Threads::Threads
         geom
         soccer
         ${Boost_LIBRARIES}
 )
 
-set_property(TARGET DELFT_SOCCER PROPERTY CXX_STANDARD 14)
+
+set(_USE_PROTO ON)
+if (_USE_PROTO)
+  add_definitions(-DUSE_DEBUG)
+  INCLUDE(FindProtobuf)
+  FIND_PACKAGE(Protobuf REQUIRED)
+  PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER ./proto/messages_parsian_worldmodel.proto)
+  ADD_LIBRARY(proto ${PROTO_HEADER} ${PROTO_SRC})
+  include_directories(
+          ${Boost_INCLUDE_DIRS}
+          ${CMAKE_CURRENT_BINARY_DIR}
+          proto
+          ${PROTOBUF_INCLUDE_DIR}
+  )
+  TARGET_LINK_LIBRARIES(parsian
+          proto
+          ${PROTOBUF_LIBRARY})
+endif ()
+
 
 if(WIN32)
   if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")

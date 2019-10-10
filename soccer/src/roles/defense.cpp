@@ -1,7 +1,7 @@
 #include <soccer.h>
 
 void Soccer::defense(std::vector<int> ids) {
-	Circle2D defence_line(field.ourGoalCenter, 1);
+	rcsc::Circle2D defence_line(field.ourGoalCenter, 1);
 	Segment2D ball_to_goal(field.ourGoalCenter, worldModel.ball.pos);
 	auto bg_vector = field.ourGoalCenter - worldModel.ball.pos;
 	auto amood = bg_vector.rotate(90).normalize();

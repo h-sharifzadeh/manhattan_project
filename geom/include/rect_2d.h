@@ -37,6 +37,8 @@
 #include "line_2d.h"
 #include "vector_2d.h"
 
+
+
 namespace rcsc {
 
 class Ray2D;

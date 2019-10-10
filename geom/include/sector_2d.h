@@ -35,7 +35,6 @@
 #include "region_2d.h"
 #include "vector_2d.h"
 
-#define M_PI 3.1415
 
 namespace rcsc {
 

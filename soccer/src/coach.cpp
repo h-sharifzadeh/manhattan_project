@@ -25,7 +25,7 @@ void Soccer::coach() {
     if (worldModel.ball.pos.x > attatck_line) {
         attack_state = 1;
 	    defense({robots[0]});
-        Support({robots[1], robots[2]});
+//        fast({robots[1], robots[2]});
 
     } else {
         attack_state = 0;
