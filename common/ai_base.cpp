@@ -232,7 +232,7 @@ namespace aiwc {
     , pimpl(std::make_unique<impl>())
   {
     // start io thread
-    pimpl->work = std::make_unique<decltype(pimpl->work)::element_type>(pimpl->io); // prevent io_.run() from returning immediately
+    pimpl->work = std::make_unique<decltype(pimpl->work)::element_type>(pimpl->io); // prevent io_.execute() from returning immediately
     pimpl->io_thread = std::make_unique<std::thread>([&]() {
         pimpl->io.run();
       });

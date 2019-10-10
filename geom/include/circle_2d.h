@@ -123,8 +123,7 @@ public:
       \param point considered point
       \return true if point is contained by this circle
      */
-    virtual
-    bool contains( const Vector2D & point ) const
+    bool contains( const Vector2D & point ) const override
       {
           return M_center.dist2( point ) < M_radius * M_radius;
       }

@@ -1,8 +1,6 @@
+#include <soccer.h>
 
-#ifndef PARSIAN_GOALIE_H
-#define PARSIAN_GOALIE_H
-
-void Soccer::Goalie(size_t id)
+void Soccer::GK(int id)
 {
     rcsc::Vector2D ballPos{worldModel.ball.pos + worldModel.ball.vel.normalizedVector()};
     rcsc::Line2D ballPath{ worldModel.ball.pos, worldModel.ball.pos + worldModel.ball.vel.normalizedVector()*1000 };
@@ -34,9 +32,9 @@ void Soccer::Goalie(size_t id)
     if (worldModel.ourRobots[id].pos.x > -info.field[0] / 2 + 5) targetPos = field.ourGoalCenter;
 
     if (!forward) {
-        gotopoint(id, targetPos, 1, 90);
+	    move(id, targetPos, 1, 90);
     } else {
-        onetouch(id, field.theirGoalCenter);
+	    fast(id, field.theirGoalCenter);
     }
 
     // SPIN
@@ -44,8 +42,3 @@ void Soccer::Goalie(size_t id)
 //        spin(id, worldModel.ball.pos, 30);
 //    }
 }
-
-
-
-
-#endif //PARSIAN_GOALIE_H

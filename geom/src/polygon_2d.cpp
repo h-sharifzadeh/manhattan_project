@@ -538,19 +538,19 @@ Polygon2D::getScissoredConnectedPolygon( const Rect2D & r ) const
 
     scissorWithLine< XLessEqual >( XLessEqual( r.maxX() ),
                                    p, &clipped_p_1,
-                                   Line2D( Vector2D( r.maxX(), 0.0 ), 90.0 ) );
+                                   Line2D( Vector2D( r.maxX(), 0.0 ), AngleDeg(90.0) ) );
 
     scissorWithLine< YLessEqual >( YLessEqual( r.maxY() ),
                                    clipped_p_1, &clipped_p_2,
-                                   Line2D( Vector2D( 0.0, r.maxY() ), 0.0 ) );
+                                   Line2D( Vector2D( 0.0, r.maxY() ), AngleDeg(0.0) ) );
 
     scissorWithLine< XMoreEqual >( XMoreEqual( r.minX() ),
                                    clipped_p_2, &clipped_p_3,
-                                   Line2D( Vector2D( r.minX(), 0.0 ), 90.0 ) );
+                                   Line2D( Vector2D( r.minX(), 0.0 ), AngleDeg(90.0) ) );
 
     scissorWithLine< YMoreEqual >( YMoreEqual( r.minY() ),
                                    clipped_p_3, &clipped_p_4,
-                                   Line2D( Vector2D( 0.0, r.minY() ), 0.0 ) );
+                                   Line2D( Vector2D( 0.0, r.minY() ), AngleDeg(0.0) ) );
 
     return Polygon2D( clipped_p_4 );
 }

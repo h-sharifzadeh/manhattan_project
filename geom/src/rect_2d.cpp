@@ -49,10 +49,10 @@ Rect2D &
 Rect2D::setTopLeft( const double & x,
                     const double & y )
 {
-    double new_left = std::fmin( right(), x );
-    double new_right = std::fmax( right(), x );
-    double new_top = std::fmin( bottom(), y );
-    double new_bottom = std::fmax( bottom(), y );
+    double new_left = std::min( right(), x );
+    double new_right = std::max( right(), x );
+    double new_top = std::min( bottom(), y );
+    double new_bottom = std::max( bottom(), y );
 
     return assign( new_left,
                    new_top,
@@ -69,10 +69,10 @@ Rect2D &
 Rect2D::setBottomRight( const double & x,
                         const double & y )
 {
-    double new_left = std::fmin( left(), x );
-    double new_right = std::fmax( left(), x );
-    double new_top = std::fmin( top(), y );
-    double new_bottom = std::fmax( top(), y );
+    double new_left = std::min( left(), x );
+    double new_right = std::max( left(), x );
+    double new_top = std::min( top(), y );
+    double new_bottom = std::max( top(), y );
 
     return assign( new_left,
                    new_top,
@@ -88,8 +88,8 @@ const
 Rect2D &
 Rect2D::setLeft( const double & x )
 {
-    double new_left = std::fmin( right(), x );
-    double new_right = std::fmax( right(), x );
+    double new_left = std::min( right(), x );
+    double new_right = std::max( right(), x );
 
     M_top_left.x = new_left;
     M_size.setLength( new_right - new_left );

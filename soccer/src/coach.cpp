@@ -1,14 +1,8 @@
-//
-// Created by parsian-ai on 9/14/19.
-//
+#include <soccer.h>
 
-#ifndef PARSIAN_COACH_H
-#define PARSIAN_COACH_H
-
-
-void Soccer::execute() {
-
-    Goalie(0);
+void Soccer::coach() {
+	
+	GK(0);
     std::vector<int> robots{1, 2, 3, 4};
     double attatck_line = (attack_state == 1) ? -.6 : 0.6;
 
@@ -25,20 +19,18 @@ void Soccer::execute() {
         }
     }
     robots.erase(robots.begin() + min_index -1);
-    Playmake(min_index);
+	attacker(min_index);
 
 
     if (worldModel.ball.pos.x > attatck_line) {
         attack_state = 1;
-        Defence({robots[0]});
-        Support({robots[1], robots[2]});
+	    defense({robots[0]});
+//        fast({robots[1], robots[2]});
 
     } else {
         attack_state = 0;
-        Defence({robots[0], robots[1], robots[2]});
+	    defense({robots[0], robots[1], robots[2]});
 
     }
 
 }
-
-#endif //PARSIAN_COACH_H

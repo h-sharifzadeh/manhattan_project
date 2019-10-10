@@ -1,5 +1,5 @@
-parsian/build
-parsian/cmake-build-debug
+build
+cmake-build-debug
 
 CMakeLists.txt.user
 CMakeCache.txt
@@ -864,7 +864,7 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 
-# Azure Stream Analytics local run output
+# Azure Stream Analytics local execute output
 ASALocalRun/
 
 # MSBuild Binary and Structured Log
