@@ -1,6 +1,7 @@
 #include <soccer.h>
 
 #include <math.h>
+#include "ploterProtobuf.h"
 
 Soccer::Soccer(const std::string& server_ip, std::size_t port, const std::string& realm, std::string key, std::string datapath)
         : ai_base(server_ip, port, realm, key, datapath) {
@@ -38,6 +39,7 @@ void Soccer::update(const aiwc::frame &f) {
     coach();
     set_wheel(wheels);      //set all robots' wheels
     lastWorldModel = worldModel;
+    sendWorldModelMessage(worldModel);
 }
 
 void Soccer::updateWorldModel(const aiwc::frame &f) {
