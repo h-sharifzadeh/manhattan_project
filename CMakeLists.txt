@@ -21,7 +21,7 @@ add_library(geom
         geom/src/line_2d.cpp
         geom/src/convex_hull.cpp
         geom/src/circle_2d.cpp
-        )
+        soccer/include/ploterProtobuf.h)
 
 add_library(soccer
         common/ai_base.cpp
@@ -34,7 +34,7 @@ add_library(soccer
         soccer/src/roles/attacker.cpp
         soccer/src/roles/gk.cpp
         soccer/src/coach.cpp
-        soccer/src/field.cpp)
+        soccer/src/field.cpp soccer/src/ploterProtobuf.cpp)
 
 add_executable(parsian
         soccer/src/main.cpp
