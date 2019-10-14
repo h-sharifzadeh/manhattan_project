@@ -4,27 +4,45 @@ void Soccer::setWheels(int id, double leftWheel, double rightWheel) {
 	if (id < 0 || id > info.number_of_robots - 1) {
 		std::cerr << "trying to set an out of index robot wheel" << std::endl;
 	}
+	const double max_wheel_speed = 2.5;
+
+	if (rightWheel >= leftWheel && rightWheel > max_wheel_speed) {
+		double k = max_wheel_speed / rightWheel;
+		rightWheel = max_wheel_speed;
+		leftWheel *= k;
+	}
+	else if (rightWheel < leftWheel && leftWheel > max_wheel_speed) {
+		double k = max_wheel_speed / leftWheel;
+		leftWheel = max_wheel_speed;
+		rightWheel *= k;
+	}
 	wheels[2 * id] = leftWheel;
 	wheels[2 * id + 1] = rightWheel;
 }
 
-void Soccer::setVel(int id, double vel_f, double angle, double max_vel) {
-	double error{rcsc::AngleDeg::normalize_angle(angle - worldModel.ourRobots[id].theta)};
-	
-	
-	vel_f = fmin(vel_f, max_vel);
-	
-	if (fabs(error) > 90) {
-		error = rcsc::AngleDeg::normalize_angle(angle + 180 - worldModel.ourRobots[id].theta);
-		vel_f *= -1;
-	}
-	double vel_w = PID_ang[id].execute(error);
-	
-	// enhancement
-	vel_f *= (90 - fabs(error)) / 50;
-	
-	vel_w = fmin(vel_w, .11);
-	vel_w = fmax(vel_w, -.11);
-//    std::cout<<"vel_w"<<vel_w<<std::endl;
-	setWheels(id, -vel_f + vel_w, -vel_f - vel_w);
+PID w[5];
+void Soccer::setWheelsPID(int id, double vel_tan, double _w) {
+
+	w[id].kp = 1; w[id].ki = 0; w[id].kd = 0.2;
+	_w += _w;
+	w[id].execute(_w - wm->ourRobots[id].angularVel);
+	double w_o = (_w != 0 ) ? w[id].lastOut : 0;
+
+	//wheel =  a*x
+	double a{ 1 };
+	double right_vel_tan{ a * vel_tan };
+	double left_vel_tan{ a * vel_tan };
+	//solve w
+	//wheel = a*w
+	double a1{ 1 };
+	double right_vel_w{ a1 * w_o };
+	double left_vel_w{ -a1 * w_o };
+	double right_wheel = right_vel_tan + right_vel_w;
+	double left_wheel = left_vel_tan + left_vel_w;
+
+	setWheels(id, left_wheel, right_wheel);
+}
+
+void Soccer::setVel(int id, double vel_f, double w, double max_vel) {
+//	setWheels(id, -vel_f + vel_w, -vel_f - vel_w);
 }

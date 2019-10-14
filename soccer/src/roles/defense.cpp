@@ -2,10 +2,10 @@
 
 void Soccer::defense(std::vector<int> ids) {
 	rcsc::Circle2D defence_line(field.ourGoalCenter, 1);
-	Segment2D ball_to_goal(field.ourGoalCenter, worldModel.ball.pos);
-	auto bg_vector = field.ourGoalCenter - worldModel.ball.pos;
+	Segment2D ball_to_goal(field.ourGoalCenter, wm->ball.pos);
+	auto bg_vector = field.ourGoalCenter - wm->ball.pos;
 	auto amood = bg_vector.rotate(90).normalize();
-	auto bg_vector2 = field.ourGoalCenter - worldModel.ball.pos;
+	auto bg_vector2 = field.ourGoalCenter - wm->ball.pos;
 	
 	double dir = bg_vector2.rotate(90).th().degree();
 	Vector2D sol1, sol2;

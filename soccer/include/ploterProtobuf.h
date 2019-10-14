@@ -27,8 +27,8 @@ void initServer();
 
 void vec2D2vec2D(const rcsc::Vector2D& v1, Vector2DProto* v2) ;
 
-void fillMessage(const WorldModel& worldmodel);
-void sendWorldModelMessage(const WorldModel& worldmodel);
+void fillMessage(const WorldModel* worldmodel);
+void sendWorldModelMessage(const WorldModel* worldmodel);
 
 #endif //USE_PROTO
 

@@ -31,8 +31,8 @@ public:
 
 //class members
 public:
-    WorldModel worldModel;
-    WorldModel lastWorldModel;
+    WorldModel* wm;
+    WorldModel* lwm;
     Field field;
 
     //control
@@ -52,6 +52,7 @@ public:
 
     //control
     void setWheels(int id, double leftWheel, double rightWheel);
+    void setWheelsPID(int id, double vel, double w);
     void setVel(int id, double vel_f, double angle, double max_vel);
     void move(int id, rcsc::Vector2D pos, double max_vel = 2.5, double theta = 0);
     void fast(int id, rcsc::Vector2D pos, double theta = 0);

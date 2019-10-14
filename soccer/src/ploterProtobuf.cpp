@@ -15,7 +15,7 @@ void initServer()
     if (thisSocket < 0)
         std::cerr << "Socket Creation FAILED!" << std::endl;
 
-    destination.sin_port = htons(13375);
+    destination.sin_port = htons(10041);
     destination.sin_addr.s_addr = inet_addr("127.0.0.1");
     if (connect(thisSocket,(struct sockaddr *)&destination,sizeof(destination))!=0)
     {
@@ -31,7 +31,7 @@ void vec2D2vec2D(const rcsc::Vector2D& v1, Vector2DProto* v2) {
     v2->set_y(v1.getY());
 }
 
-void fillMessage(const WorldModel& worldmodel)
+void fillMessage(const WorldModel* worldmodel)
 {
     delete twm;
     twm = new(WorldModelProto);
@@ -42,12 +42,12 @@ void fillMessage(const WorldModel& worldmodel)
     moball->set_id(0);
     moball->set_direction(0);
     moball->set_angulevelocity(0);
-    vec2D2vec2D(worldmodel.ball.pos, moball->mutable_pos());
-    vec2D2vec2D(worldmodel.ball.vel, moball->mutable_vel());
+    vec2D2vec2D(worldmodel->ball.pos, moball->mutable_pos());
+    vec2D2vec2D(worldmodel->ball.vel, moball->mutable_vel());
     vec2D2vec2D(rcsc::Vector2D{0, 0}, moball->mutable_acc());
-    for (int i = 0; i < worldmodel.ourRobots.size(); i++) {
+    for (int i = 0; i < worldmodel->ourRobots.size(); i++) {
         MovingObjectProto* ourR = twm->add_our_robots();
-        const Robot& wor = worldmodel.ourRobots[i];
+        const Robot& wor = worldmodel->ourRobots[i];
         ourR->set_id(wor.id);
         ourR->set_angulevelocity(wor.angularVel);
         ourR->set_direction(wor.theta);
@@ -56,7 +56,7 @@ void fillMessage(const WorldModel& worldmodel)
         vec2D2vec2D(rcsc::Vector2D{0, 0}, ourR->mutable_acc());
 
         MovingObjectProto* oppR = twm->add_opp_robots();
-        const Robot& wopr = worldmodel.oppRobots[i];
+        const Robot& wopr = worldmodel->oppRobots[i];
         oppR->set_id(wopr.id);
         oppR->set_angulevelocity(wopr.angularVel);
         oppR->set_direction(wopr.theta);
@@ -67,7 +67,7 @@ void fillMessage(const WorldModel& worldmodel)
     }
 }
 
-void sendWorldModelMessage(const WorldModel& worldmodel)
+void sendWorldModelMessage(const WorldModel* worldmodel)
 {
     fillMessage(worldmodel);
     std::string str;
@@ -75,6 +75,7 @@ void sendWorldModelMessage(const WorldModel& worldmodel)
     if (twm->SerializePartialToString(&str))
     {
         //send data over network
+        std::cout << str.c_str() << std::endl;
         send(thisSocket, str.c_str(), str.size(), 0);
     }
 }
