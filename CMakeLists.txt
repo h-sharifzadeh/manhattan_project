@@ -34,7 +34,7 @@ add_library(soccer
         soccer/src/roles/attacker.cpp
         soccer/src/roles/gk.cpp
         soccer/src/coach.cpp
-        soccer/src/field.cpp soccer/src/ploterProtobuf.cpp)
+        soccer/src/field.cpp soccer/src/ploterProtobuf.cpp soccer/src/roles/position.cpp)
 
 add_executable(parsian
         soccer/src/main.cpp

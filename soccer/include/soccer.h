@@ -62,6 +62,7 @@ public:
 
     void GK(int id);
     void defense(std::vector<int> ids);
+    void position(std::vector<int> ids);
     void attacker(int id);
     void coach();
 
