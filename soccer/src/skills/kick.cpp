@@ -1,105 +1,65 @@
 #include <soccer.h>
 
+enum class KickState{
+    avoid,
+    behind,
+    shot,
+    none
+};
+KickState kickState = KickState::behind;
+
 void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
-	
-	double ROBOT_WIDTH{info.robot_size[id]};
-	double ROBOT_HALF_WIDTH{ROBOT_WIDTH * 1};
-	if (state != STATE::AVOID)
-		ROBOT_HALF_WIDTH = {ROBOT_WIDTH * .5};
-	double Field_width{info.field[0]};
-	double Field_height{info.field[1]};
-	Vector2D robotPos = wm->ourRobots[id].pos;
-	Vector2D ballPos = wm->ball.pos;
-
-	Vector2D bestPos = (ballPos - targetPos).normalizedVector()*(info.robot_size[id]*1.1 + info.ball_radius - 0.01) + ballPos;
-    double ballAreaRad = std::min(robotPos.dist(bestPos)-0.01,info.robot_size[id]*1.1 + info.ball_radius);
-    Circle2D ballArea(ballPos,ballAreaRad);
-
-
-	Segment2D directPath(robotPos, bestPos);
-	Vector2D dummy1,dummy2;
+    Vector2D ballPos{wm->ball.pos};
+    Vector2D robotPos{wm->ourRobots[id].pos + wm->ourRobots[id].vel*0.2};
+    if(robotPos.dist(ballPos) < robotPos.dist(ballPos + wm->ball.vel*0.5))
+        ballPos += wm->ball.vel*0.4;
+    else
+        ballPos -= wm->ball.vel*0.4;
+    Circle2D smallArea{ballPos, 0.2};
+    Circle2D bigArea{ballPos, 0.4};
+    Vector2D behindPos{ballPos + (ballPos - targetPos).normalizedVector()*0.35};
+    Vector2D frontPos{ballPos + (targetPos - ballPos).normalizedVector()*0.35};
+    Vector2D temp{(ballPos - targetPos)};
+    Vector2D avoidPos{ballPos + temp.rotate(90).normalizedVector()*0.35};
+    Segment2D robotPath{wm->ourRobots[id].pos, behindPos};
 
 
 
-	if (ballArea.intersection(directPath,&dummy1,&dummy2) > 0) {
-	    std::cout << "indirect";
-		Vector2D dummyTarget1,dummyTarget2;
-        ballArea.tangent(robotPos,&dummyTarget1,&dummyTarget2);
+    Vector2D sol1, sol2, sol3, sol4;
+    sol1.invalidate(); sol2.invalidate(); sol3.invalidate(); sol4.invalidate();
 
-		if(dummyTarget2.dist(bestPos) < dummyTarget1.dist(bestPos))
-			dummyTarget1 = dummyTarget2;
+    bool intersectBig = bigArea.intersection(robotPath, &sol3, &sol4);
+    bool intersectSmall = smallArea.intersection(robotPath, &sol1, &sol2);
 
-		move(id,dummyTarget1 + (dummyTarget1 - robotPos).normalizedVector(),(ballPos - bestPos).dir().degree());
+    double threshold{(kickState == KickState::shot ? 0.55 : 0.18)};
+    if (robotPos.dist(behindPos) < threshold)
+        kickState = KickState::shot;
+    else if(!intersectBig && !intersectSmall){
+        kickState = KickState::behind;
+    } else if(intersectBig && !intersectSmall){
+        kickState = (robotPos.dist(behindPos) < robotPos.dist(frontPos) ? KickState::behind : KickState::avoid);
+    }else {
+        kickState = KickState::avoid;
+    }
 
-	} else {
-	    if(robotPos.dist(bestPos) < 0.00001) {
-            setWheelsPID(id,1.8,0,1.8);
-	    } else {
-            std::cout << "direct";
-            move(id, bestPos, (ballPos - bestPos).dir().degree());
-        }
-	}
-//
-//	Vector2D centerPos = (robotPos + ballPos) * 0.5;
 
-//
-//	rcsc::Vector2D ballPos{wm->ball.pos + wm->ball.vel * (.04)};
-//	rcsc::Vector2D robotPos{wm->ourRobots[id].pos + wm->ourRobots[id].vel * (.005)};
-//	rcsc::Vector2D norm{ballPos - targetPos};
-//	norm = norm.normalize();
-//	rcsc::Vector2D prependicular{norm.rotatedVector(90)};
-//	rcsc::Vector2D behindPos{ballPos + norm * .5 + wm->ball.vel * .12};
-//	rcsc::Vector2D avoidPos{ballPos + prependicular * .4};
-//	rcsc::Circle2D robotArea{robotPos, ROBOT_HALF_WIDTH * sqrt(2)};
-//	rcsc::Vector2D sol1, sol2;
-////    if (behindPosIsValid(targetPos)) {
-////        behindPos = lastBehinePos;
-////    } else {
-////        lastBehinePos = behindPos;
-////    }
-//	if (robotArea.intersection(rcsc::Segment2D{ballPos, targetPos}, &sol1, &sol2) > 0) {
-//		if (state == STATE::KICK) {
-//			if (robotPos.x > wm->ball.pos.x)
-//				state = STATE::AVOID;
-//		} else
-//			state = STATE::AVOID;
-//
-//	} else if (state != STATE::KICK) {
-//		if (wm->ourRobots[id].pos.dist(behindPos) < .1)
-//			state = STATE::KICK;
-//		else
-//			state = STATE::BEHIND;
-//	} else if (robotPos.x > wm->ball.pos.x + .1)
-//		state = state = STATE::BEHIND;
-//
-//
-////    if (avoidPos.x < -Field_width / 2 + ROBOT_WIDTH || avoidPos.x > Field_width / 2 + ROBOT_WIDTH ||
-////        avoidPos.y < -Field_height / 2 + ROBOT_WIDTH || avoidPos.x > Field_height / 2 + ROBOT_WIDTH)
-////        state = STATE::KICK;
-//
-//	switch (state) {
-//
-//		case AVOID:
-//			move(id, avoidPos);
-//			std::cout << "avoid" << std::endl;
-//
-//			break;
-//		case BEHIND:
-//			move(id, behindPos);
-//			std::cout << "behind" << std::endl;
-//
-//			break;
-//		case KICK:
-//			if (ballPos.dist(robotPos) < .25) {
-//				//fast kick
-//
-//				move(id, ballPos - norm * 2, 3);
-//
-//			} else
-//				move(id, ballPos, 5);
-//			std::cout << "kikckkkkkk" << std::endl;
-//
-//			break;
-//	}
-	
+    switch(kickState)
+    {
+        case KickState::avoid:
+            std::cout << "avoid " << std::endl;
+            move(id, avoidPos, behindPos.dir().degree());
+            break;
+        case KickState::behind:
+            std::cout << "behind " << std::endl;
+            move(id, behindPos, targetPos.dir().degree());
+            break;
+        case KickState::shot:
+            std::cout << "shot " << std::endl;
+            move(id, ballPos + wm->ball.vel, ballPos.dir().degree());
+            break;
+        default:
+            std::cout << "none " << std::endl;
+
+            break;
+    }
 }

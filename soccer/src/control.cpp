@@ -18,7 +18,7 @@ void Soccer::setWheels(int id, double leftWheel, double rightWheel, double max_w
 		leftWheel = max_wheel_speed * (leftWheel > 0 ? 1 : -1);
 		rightWheel *= k;
 	}
-    std::cout << leftWheel << ", " << rightWheel << std::endl;
+    //std::cout << leftWheel << ", " << rightWheel << std::endl;
     wheels[2 * id] = leftWheel;
 	wheels[2 * id + 1] = rightWheel;
 }
