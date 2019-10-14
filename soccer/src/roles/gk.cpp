@@ -1,5 +1,6 @@
 #include <soccer.h>
 
+
 void Soccer::GK(int id)
 {
     rcsc::Vector2D ballPos{wm->ball.pos + wm->ball.vel.normalizedVector()};
@@ -13,7 +14,7 @@ void Soccer::GK(int id)
     else if (ballPos.x > 1.5) p.invalidate();
     double y;
     bool forward{false};
-    if (field.ourBigPenalty.contains(ballPos) && wm->ball.vel.length() < 1.5)
+    if (field.ourBigPenalty.contains(ballPos) && (wm->oppRobots[1].pos - ballPos).length() < 1.5 && (wm->oppRobots[2].pos - ballPos).length() < 1.5 && (wm->oppRobots[3] - ballPos).len < 1.5 && (wm->oppRobots[4] - ballPos).len < 1.5 )
         forward = true;
     //p.invalidate();
     if (p.isValid()) {
@@ -22,6 +23,10 @@ void Soccer::GK(int id)
     else {
         y = wm->ball.pos.y + wm->ball.vel.y*1;
     }
+
+    bool touchone{false};
+    Vector2D sol1,sol2;
+    if ()
 
 
     if (y < -info.goal[1] / 2 + 0.05) y = -info.goal[1] / 2 + 0.02;
@@ -41,4 +46,8 @@ void Soccer::GK(int id)
 //    if (wm->ball.pos.dist(wm->ourRobot(id).pos) < 8.5 && wm->ball.vel.length() < 2) {
 //        spin(id, wm->ball.pos, 30);
 //    }
+
+
+
+if
 }
