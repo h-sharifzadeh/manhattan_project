@@ -14,6 +14,7 @@ void Soccer::coach() {
     std::vector<int> lll ;
     lll.push_back(1);
     defense(lll);
+    move(4,wm->ball.pos);
 //    kick(3,field.theirGoalCenter);
 //    circleMove((int)(a[0]), Vector2D(a[1], a[2]), a[3], a[4]);
 //    setWheelsPID((int)(a[0]),a[1], a[2]);

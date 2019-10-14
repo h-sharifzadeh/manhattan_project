@@ -31,7 +31,7 @@ Soccer::Soccer(const std::string& server_ip, std::size_t port, const std::string
     PID_pos[DEF1_ID].kd = PID_pos[DEF2_ID].kd = 0.0;
     PID_pos[DEF1_ID].ki = PID_pos[DEF2_ID].ki = 0.0;
 
-    PID_pos[ATT1_ID].kp = PID_pos[ATT2_ID].kp = -2;
+    PID_pos[ATT1_ID].kp = PID_pos[ATT2_ID].kp = -4;
     PID_pos[ATT1_ID].kd = PID_pos[ATT2_ID].kd = 0.0;
     PID_pos[ATT1_ID].ki = PID_pos[ATT2_ID].ki = 0.0;
 
