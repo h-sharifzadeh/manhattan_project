@@ -11,25 +11,36 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
 	Vector2D robotPos = wm->ourRobots[id].pos;
 	Vector2D ballPos = wm->ball.pos;
 
-	Circle2D ballArea(ballPos,info.robot_size[id] + info.ball_radius);
-	Vector2D bestPos = (ballPos - targetPos)*(info.robot_size[id] + info.ball_radius + 0.01) + ballPos;
+	Vector2D bestPos = (ballPos - targetPos).normalizedVector()*(info.robot_size[id]*1.1 + info.ball_radius - 0.01) + ballPos;
+    double ballAreaRad = std::min(robotPos.dist(bestPos)-0.01,info.robot_size[id]*1.1 + info.ball_radius);
+    Circle2D ballArea(ballPos,ballAreaRad);
+
+
 	Segment2D directPath(robotPos, bestPos);
 	Vector2D dummy1,dummy2;
 
+
+
 	if (ballArea.intersection(directPath,&dummy1,&dummy2) > 0) {
+	    std::cout << "indirect";
 		Vector2D dummyTarget1,dummyTarget2;
-		ballArea.tangent(robotPos,&dummyTarget1,&dummyTarget2);
+        ballArea.tangent(robotPos,&dummyTarget1,&dummyTarget2);
 
 		if(dummyTarget2.dist(bestPos) < dummyTarget1.dist(bestPos))
 			dummyTarget1 = dummyTarget2;
 
-		move(id,dummyTarget1,(ballPos - bestPos).dir().degree());
+		move(id,dummyTarget1 + (dummyTarget1 - robotPos).normalizedVector(),(ballPos - bestPos).dir().degree());
 
 	} else {
-		move(id,bestPos,(ballPos - bestPos).dir().degree());
+	    if(robotPos.dist(bestPos) < 0.00001) {
+            setWheelsPID(id,1.8,0,1.8);
+	    } else {
+            std::cout << "direct";
+            move(id, bestPos, (ballPos - bestPos).dir().degree());
+        }
 	}
-
-	Vector2D centerPos = (robotPos + ballPos) * 0.5;
+//
+//	Vector2D centerPos = (robotPos + ballPos) * 0.5;
 
 //
 //	rcsc::Vector2D ballPos{wm->ball.pos + wm->ball.vel * (.04)};

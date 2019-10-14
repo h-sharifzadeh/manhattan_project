@@ -12,7 +12,7 @@ void Soccer::coach() {
     }
     file.close();
 
-    kick(3,field.theirGoalCenter);
+    kick(4,field.theirGoalCenter);
 //    circleMove((int)(a[0]), Vector2D(a[1], a[2]), a[3], a[4]);
 //    setWheelsPID((int)(a[0]),a[1], a[2]);
 
