@@ -10,7 +10,7 @@ KickState kickState = KickState::behind;
 
 void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     Vector2D ballPos{wm->ball.pos};
-    Vector2D robotPos{wm->ourRobots[id].pos + wm->ourRobots[id].vel*0.2};
+    Vector2D robotPos{wm->ourRobots[id].pos + wm->ourRobots[id].vel*0};
     if(robotPos.dist(ballPos) < robotPos.dist(ballPos + wm->ball.vel*0.5))
         ballPos += wm->ball.vel*0.4;
     else
@@ -37,7 +37,7 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     else if(!intersectBig && !intersectSmall){
         kickState = KickState::behind;
     } else if(intersectBig && !intersectSmall){
-        kickState = (robotPos.dist(behindPos) < robotPos.dist(frontPos) ? KickState::behind : KickState::avoid);
+        kickState = (robotPos.dist(behindPos) < (robotPos.dist(frontPos) + ((kickState == KickState::behind)*0.5))? KickState::behind : KickState::avoid);
     }else {
         kickState = KickState::avoid;
     }
