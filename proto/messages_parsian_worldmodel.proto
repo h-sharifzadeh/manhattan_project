@@ -1,0 +1,41 @@
+syntax = "proto2";
+
+message Vector2DProto {
+	required float x = 1;
+	required float y = 2;
+}
+
+message MovingObjectProto {
+	required uint32 id            = 1;
+	required Vector2DProto pos         = 2;
+	required Vector2DProto vel         = 3;
+	required Vector2DProto acc         = 4;
+	required float anguleVelocity = 5;
+	required float direction      = 6;
+}
+
+
+enum GameStateProto {
+	PlayOn             = 0;  
+	FreeBall_LeftTop   = 1;
+	FreeBall_LeftBot   = 2;
+	FreeBall_RightTop  = 3;
+	FreeBall_RightBot  = 4;
+	PlaceKick_Yellow   = 5;
+	PlaceKick_Blue     = 6;
+	PenaltyKick_Yellow = 7;
+	PenaltyKick_Blue   = 8;
+	FreeKick_Yellow    = 9;
+	FreeKick_Blue      = 10;
+	GoalKick_Yellow    = 11;
+	GoalKick_Blue      = 12;
+}
+
+message WorldModelProto {
+	required MovingObjectProto ball = 1;
+	repeated MovingObjectProto our_robots = 2;
+	repeated MovingObjectProto opp_robots = 3;
+	required bool blue = 4;
+	required string mode = 5;
+	required GameStateProto gameState = 6;
+}
