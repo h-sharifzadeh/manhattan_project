@@ -16,6 +16,7 @@ void Soccer::move(int id, rcsc::Vector2D pos, double theta, double max_vel) {
     if (std::abs(theta_error) > 20 || error < 0.1) {
         setWheelsPID(id, 0, w, max_vel);
     } else {
+        setWheelsPID(id, normal_vel, w, max_vel);
     }
 
 
