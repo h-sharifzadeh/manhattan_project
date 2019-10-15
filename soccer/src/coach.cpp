@@ -3,7 +3,7 @@
 #include <fstream>
 
 std::ifstream file;
-double p_error = 0;
+
 
 void Soccer::coach() {
 //    double a[10];
@@ -13,8 +13,13 @@ void Soccer::coach() {
 //    }
 //    file.close();
     GK(0);
+
+    std::vector<int> lll ;
+    lll.push_back(1);
+    defense(lll);
     position({2,4});
     move(3,wm->ball.pos + wm->ball.vel, (wm->ball.pos - wm->ourRobots[4].pos).th().degree());
+
 //    circleMove((int)(a[0]), Vector2D(a[1], a[2]), a[3], a[4]);
 //    setWheelsPID((int)(a[0]),a[1], a[2]);
 

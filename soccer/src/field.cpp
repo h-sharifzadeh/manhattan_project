@@ -5,8 +5,6 @@
 #include "field.h"
 
 void Field::update(const aiwc::game_info& info) {
-
-
     this->cornerA = {(0 - info.field[0]*0.5), (0 - info.field[1]*0.5)};
     this->cornerB = {(0 + info.field[0]*0.5), (0 - info.field[1]*0.5)};
     this->cornerC = {(0 + info.field[0]*0.5), (0 + info.field[1]*0.5)};
@@ -34,7 +32,6 @@ void Field::update(const aiwc::game_info& info) {
     this->theirSmallPenaltyD = theirGoalCenter + Vector2D{-info.goal_area[0], +info.goal_area[1]*0.5};
     this->theirGoalU = theirGoalCenter + Vector2D{0, -info.goal[1]*0.5};
     this->theirGoalD = theirGoalCenter + Vector2D{0, +info.goal[1]*0.5};
-
     this->ourBigPenalty     = Rect2D(ourBigPenaltyA    , ourBigPenaltyC);
     this->ourSmallPenalty   = Rect2D(ourSmallPenaltyA  , ourSmallPenaltyC);
     this->theirBigPenalty   = Rect2D(theirBigPenaltyA  , theirBigPenaltyC);
