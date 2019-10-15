@@ -21,8 +21,13 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     Vector2D frontPos{ballPos + (targetPos - ballPos).normalizedVector()*0.35};
     Vector2D temp{(ballPos - targetPos)};
     Vector2D avoidPos{ballPos + temp.rotate(90).normalizedVector()*0.35};
+    if(!Rect2D{field.cornerA, field.cornerC}.contains(avoidPos))
+        avoidPos = ballPos + temp.rotate(-90).normalizedVector()*0.35;
     Segment2D robotPath{wm->ourRobots[id].pos, behindPos};
 
+    Line2D ball_target{ballPos, targetPos};
+    Line2D robot_ball{robotPos, ballPos};
+    std::cout << Vector2D::angleOf(targetPos, ballPos, robotPos) << std::endl;
 
 
     Vector2D sol1, sol2, sol3, sol4;
@@ -31,7 +36,7 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     bool intersectBig = bigArea.intersection(robotPath, &sol3, &sol4);
     bool intersectSmall = smallArea.intersection(robotPath, &sol1, &sol2);
 
-    double threshold{(kickState == KickState::shot ? 0.55 : 0.18)};
+    double threshold{(kickState == KickState::shot ? 0.35 : 0.14)};
     if (robotPos.dist(behindPos) < threshold)
         kickState = KickState::shot;
     else if(!intersectBig && !intersectSmall){
@@ -43,23 +48,23 @@ void Soccer::kick(int id, const rcsc::Vector2D &targetPos) {
     }
 
 
-    switch(kickState)
-    {
-        case KickState::avoid:
-            std::cout << "avoid " << std::endl;
-            move(id, avoidPos, behindPos.dir().degree());
-            break;
-        case KickState::behind:
-            std::cout << "behind " << std::endl;
-            move(id, behindPos, targetPos.dir().degree());
-            break;
-        case KickState::shot:
-            std::cout << "shot " << std::endl;
-            move(id, ballPos + wm->ball.vel, ballPos.dir().degree());
-            break;
-        default:
-            std::cout << "none " << std::endl;
-
-            break;
-    }
+//    switch(kickState)
+//    {
+//        case KickState::avoid:
+//            std::cout << "avoid " << std::endl;
+//            move(id, avoidPos, behindPos.dir().degree());
+//            break;
+//        case KickState::behind:
+//            std::cout << "behind " << std::endl;
+//            move(id, behindPos, targetPos.dir().degree());
+//            break;
+//        case KickState::shot:
+//            std::cout << "shot " << std::endl;
+//            move(id, ballPos + wm->ball.vel, ballPos.dir().degree());
+//            break;
+//        default:
+//            std::cout << "none " << std::endl;
+//
+//            break;
+//    }
 }
