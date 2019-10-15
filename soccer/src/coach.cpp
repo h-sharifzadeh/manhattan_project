@@ -6,13 +6,13 @@ std::ifstream file;
 double p_error = 0;
 
 void Soccer::coach() {
-    double a[10];
-    file.open("a.txt");
-    for(auto& f : a) {
-        file >> f;
-    }
-    file.close();
-
+//    double a[10];
+//    file.open("a.txt");
+//    for(auto& f : a) {
+//        file >> f;
+//    }
+//    file.close();
+    GK(0);
     position({2,4});
     move(3,wm->ball.pos + wm->ball.vel, (wm->ball.pos - wm->ourRobots[4].pos).th().degree());
 //    circleMove((int)(a[0]), Vector2D(a[1], a[2]), a[3], a[4]);
@@ -20,7 +20,7 @@ void Soccer::coach() {
 
     return;
 
-    move((int)(a[0]),wm->ball.pos + wm->ball.vel, (wm->ball.pos - wm->ourRobots[a[0]].pos).th().degree(), a[1]);
+//    move((int)(a[0]),wm->ball.pos + wm->ball.vel, (wm->ball.pos - wm->ourRobots[a[0]].pos).th().degree(), a[1]);
     return;
     GK(0);
 

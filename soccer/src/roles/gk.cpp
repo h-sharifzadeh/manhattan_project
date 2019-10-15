@@ -26,8 +26,8 @@ void Soccer::GK(int id)
         y = wm->ball.pos.y + wm->ball.vel.y*1;
     }
 
-    if (y < -info.goal[1] / 2 + 0.05) y = -info.goal[1] / 2 + 0.02;
-    if (y > info.goal[1] / 2 - 0.05) y = info.goal[1] / 2 - 0.02;
+    if (y < -info.goal[1] / 2 + 0.05) y = -info.goal[1] / 2 + 0.03;
+    if (y > info.goal[1] / 2 - 0.05) y = info.goal[1] / 2 - 0.03;
 
     rcsc::Vector2D targetVel = rcsc::Vector2D(0, 1000);
     rcsc::Vector2D targetPos = rcsc::Vector2D(-info.field[0] / 2 + 0.02, y);
@@ -48,5 +48,5 @@ void Soccer::GK(int id)
 
 
 
-if
+
 }
