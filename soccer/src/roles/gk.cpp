@@ -14,20 +14,17 @@ void Soccer::GK(int id)
     else if (ballPos.x > 1.5) p.invalidate();
     double y;
     bool forward{false};
+	bool touchone{false};
     if (field.ourBigPenalty.contains(ballPos) && (wm->oppRobots[1].pos - ballPos).length() < 1.5 && (wm->oppRobots[2].pos - ballPos).length() < 1.5 && (wm->oppRobots[3].pos - ballPos).length() < 1.5 && (wm->oppRobots[4].pos - ballPos).length() < 1.5 )
         forward = true;
     //p.invalidate();
     if (p.isValid()) {
         y = p.y;
+	   touchone = true;  
     }
     else {
         y = wm->ball.pos.y + wm->ball.vel.y*1;
     }
-
-    bool touchone{false};
-    Vector2D sol1,sol2;
-    if ()
-
 
     if (y < -info.goal[1] / 2 + 0.05) y = -info.goal[1] / 2 + 0.02;
     if (y > info.goal[1] / 2 - 0.05) y = info.goal[1] / 2 - 0.02;
@@ -37,6 +34,8 @@ void Soccer::GK(int id)
     if (wm->ourRobots[id].pos.x > -info.field[0] / 2 + 5) targetPos = field.ourGoalCenter;
 
     if (!forward && !touchone) {
+	    move(id, Vector2D{field.ourGoalU.x ,ballPos.y} , 1, 90);
+    } else if (!forward && touchone) {
 	    move(id, targetPos, 1, 90);
     } else {
 	    fast(id, field.theirGoalCenter);
