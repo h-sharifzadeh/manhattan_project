@@ -16,7 +16,6 @@ void Soccer::attacker(int id){
     {
         target = ballPos + (ballPos - field.ourGoalCenter).normalizedVector()*1000;
     }
-    std::cout << target << std::endl;
 
 
     kick(id,target);
