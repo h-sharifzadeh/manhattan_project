@@ -11,8 +11,8 @@ Soccer::Soccer(const std::string& server_ip, std::size_t port, const std::string
 
     for (auto& wheel : wheels) wheel = 0;
 
-    PID_ang[GK_ID].kp = -0.6 * M_PI / 180.0;
-    PID_ang[GK_ID].kd = 0.0125;
+    PID_ang[GK_ID].kp = -0.2 * M_PI / 180.0;
+    PID_ang[GK_ID].kd = 0.003;
     PID_ang[GK_ID].ki = 0.0;
 
     PID_ang[DEF1_ID].kp = PID_ang[DEF2_ID].kp = -0.6 * M_PI / 180.0;
@@ -23,7 +23,7 @@ Soccer::Soccer(const std::string& server_ip, std::size_t port, const std::string
     PID_ang[ATT1_ID].kd = PID_ang[ATT2_ID].kd = 0.0;
     PID_ang[ATT1_ID].ki = PID_ang[ATT2_ID].ki = 0.0;
 
-    PID_pos[GK_ID].kp = -6;
+    PID_pos[GK_ID].kp = -5;
     PID_pos[GK_ID].kd = 0.0;
     PID_pos[GK_ID].ki = 0.0;
 
