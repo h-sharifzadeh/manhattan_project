@@ -14,7 +14,7 @@ void Soccer::GK(int id)
     else if (ballPos.x > 1.5) p.invalidate();
     double y;
     bool forward{false};
-    if (field.ourBigPenalty.contains(ballPos) && (wm->oppRobots[1].pos - ballPos).length() < 1.5 && (wm->oppRobots[2].pos - ballPos).length() < 1.5 && (wm->oppRobots[3] - ballPos).len < 1.5 && (wm->oppRobots[4] - ballPos).len < 1.5 )
+    if (field.ourBigPenalty.contains(ballPos) && (wm->oppRobots[1].pos - ballPos).length() < 1.5 && (wm->oppRobots[2].pos - ballPos).length() < 1.5 && (wm->oppRobots[3].pos - ballPos).length() < 1.5 && (wm->oppRobots[4].pos - ballPos).length() < 1.5 )
         forward = true;
     //p.invalidate();
     if (p.isValid()) {
@@ -36,7 +36,7 @@ void Soccer::GK(int id)
     rcsc::Vector2D targetPos = rcsc::Vector2D(-info.field[0] / 2 + 0.02, y);
     if (wm->ourRobots[id].pos.x > -info.field[0] / 2 + 5) targetPos = field.ourGoalCenter;
 
-    if (!forward) {
+    if (!forward && !touchone) {
 	    move(id, targetPos, 1, 90);
     } else {
 	    fast(id, field.theirGoalCenter);
